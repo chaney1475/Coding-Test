@@ -1,34 +1,21 @@
-# 회문1
-def is_palindrome(A):
-    while len(A) > 1:
-        if A.pop() != A.pop(0):
-            return False
-    return True
-
-
-for test_case in range(1, 11):
-    answer = 0
+for Count in range(10):
     N = int(input())
-
-    A = []
-    for j in range(8):
-        A.append([c for c in input()])
-
-    if N == 1:
-        print(f"#{test_case} 64")
-    else:
-        for j in range(8):
-            for k in range(0, 9 - N):
-                str = A[j][k:k + N]
-                if is_palindrome(str):
-                    answer += 1
-
-        for j in range(8):
-            for k in range(0, 9 - N):
-                str = []
-                for i in range(0,N):
-                    str.append(A[i+k][j])
-                if is_palindrome(str):
-                    answer += 1
-
-        print(f"#{test_case} {answer}")
+    List = list(input() for _ in range(8))
+    Answer = 0
+    
+    # 가로 확인
+    for y in range(8):
+        for x in range(8-N+1):
+            A = List[y][x:x+N]
+            if A == A[::-1]:
+                Answer += 1
+ 
+    # 세로 확인
+    for y in range(8-N+1):
+        for x in range(8):
+            A = ''
+            for z in range(N):
+                A += List[y+z][x]
+            if A == A[::-1]:
+                Answer += 1    
+    print("#{} {}".format(Count+1,Answer))

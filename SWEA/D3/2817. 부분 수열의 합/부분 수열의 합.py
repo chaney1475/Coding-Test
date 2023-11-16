@@ -12,17 +12,14 @@ def dfs(index, sum):
         return
 
     for i in range(index, N):
-        if not visited[i] and sum >= A[i]:
-            visited[i] = True
+        if sum >= A[i]:
             dfs(i+1, sum - A[i])
-            visited[i] = False
 
 
 for test in range(1, t + 1):
     answer = 0
     N, K = map(int, input().split())
     A = list(map(int, input().split()))
-    visited = [False] * N
 
     dfs(0, K)
 

@@ -1,10 +1,12 @@
 import sys
 from collections import deque
 
+input = sys.stdin.readline
 N, M = map(int, input().split())
 
 A = [[] for _ in range(N + 1)]
 D = [0 for _ in range(N + 1)]
+
 for _ in range(M):
     a, b = map(int, input().split())
     A[a].append(b)

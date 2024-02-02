@@ -1,16 +1,23 @@
 import sys
-line = sys.stdin.readline().rstrip()
-word = sys.stdin.readline().rstrip()
+input = sys.stdin.readline
 
-stack = []
-ex_len = len(word)
 
-for i in range(len(line)):
-    stack.append(line[i])
-    if ''.join(stack[-ex_len:]) == word:
-        for _ in range(ex_len):
-            stack.pop()
-if stack:
-    print(''.join(stack))
-else:
+#문자열
+string = input().rstrip()
+#단어
+word = input().rstrip()
+l = len(word)
+
+
+
+a = []
+for i in string:
+    a.append(i)
+    if "".join(a[-l:]) == word:
+        for _ in range(l):
+            a.pop(-1)
+
+if len(a) == 0:
     print("FRULA")
+else:
+    print("".join(a))

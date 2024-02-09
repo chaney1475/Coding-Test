@@ -1,29 +1,18 @@
 import sys
-
 input = sys.stdin.readline
-
 N = int(input())
+
 A = []
+D = [0] * (N+2)
+D[N+1] = 0
+A.append([])
 
-answer = 0
+for i in range(1,N+1):
+    A.append(list(map(int,input().split())))
 
+for i in range(N, 0, -1):
+    D[i] = D[i+1]
+    if i + A[i][0] - 1 <= N:
+        D[i] = max(D[i],D[i+A[i][0]] + A[i][1])
 
-def DFS(x, total):
-    global answer
-    if total > answer:
-        answer = total
-
-    for i in range(x + A[x][0], N):
-        if (N - i) >= A[i][0]:
-            DFS(i, total + A[i][1])
-
-
-for _ in range(N):
-    a, b = map(int, input().split())
-    A.append((a, b))
-
-for i in range(0, N):
-    if (N-i) >= A[i][0]:
-        DFS(i, A[i][1])
-
-print(answer)
+print(D[1])

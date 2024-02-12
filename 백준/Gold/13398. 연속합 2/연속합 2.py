@@ -3,21 +3,25 @@ input = sys.stdin.readline
 
 N = int(input())
 
-D = [[-sys.maxsize, -sys.maxsize] for _ in range (100000+1)]
+A = list(map(int, input().split()))
 
-A = [-sys.maxsize]
-A += list(map(int, input().split()))
+L = [0] * N
+L[0] = A[0]
+result = L[0]
 
+for i in range(1,N):
+    L[i] = max(A[i], L[i-1] + A[i])
+    result = max(result,L[i])
 
-ends = -sys.maxsize
-#끝까지 안찾는 경우에 ends에 저장 -> 뒤가 다 음수인 경우
+R = [0] * N
+R[N-1] = A[N-1]
 
-for i in range(1,N+1):
-    if A[i] < 0:
-        big = max(D[i-1][0], D[i-1][1])
-        ends = max(ends,big)
-    D[i][0] = max(D[i-1][0] + A[i], A[i])
-    D[i][1] = max(D[i-1][0], D[i-1][1] + A[i])
+for i in range(N-2,-1,-1):
+    R[i] = max(A[i], R[i+1] + A[i])
 
-print(max(ends, D[N][0],D[N][1]))
+for i in range(1,N-1):
+    temp = L[i-1] + R[i+1]
+    result = max(result, temp)
+
+print(result)
 

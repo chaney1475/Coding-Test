@@ -1,28 +1,17 @@
-import sys
+N = int(input())
+M = int(input())
+S = input()
+answer, i, count = 0, 0, 0
 
-input = sys.stdin.readline
-
-P_n = int(input())
-S_n = int(input())
-
-S = input().rstrip()
-
-
-def make_p(x):
-    p = "IOI"
-    k = 1
-    while k < x:
-        p += "OI"
-        k += 1
-    return p
-
-
-P = make_p(P_n)
-l = len(P)
-cnt = 0
-for i in range(l-1, S_n):
-    if S[i - l + 1:i+1] == P:
-        cnt += 1
+while i < (M - 1):
+    if S[i:i+3] == 'IOI':
+        i += 2
+        count += 1
+        if count == N:
+            answer += 1
+            count -= 1
+    else:
         i += 1
+        count = 0
 
-print(cnt)
+print(answer)

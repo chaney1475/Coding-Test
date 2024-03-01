@@ -16,6 +16,6 @@ for i in range(S):
     work[-1][1] -= 1
     if work[-1][1] == 0:
         total += work[-1][0]
-        work.pop(-1)
+        work.pop()
 
 print(total)

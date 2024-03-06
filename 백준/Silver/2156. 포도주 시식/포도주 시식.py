@@ -23,5 +23,5 @@ for i in range(3, N):
                 dp[i-2] + w[i],
                 dp[i-1])
 
-print(max(dp[N-1],dp[N-2]))
+print(dp[N-1])
 

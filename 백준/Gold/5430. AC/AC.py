@@ -1,5 +1,5 @@
+from collections import deque
 import sys
-
 
 input = sys.stdin.readline
 
@@ -18,35 +18,36 @@ def check(d_list, l):
             else:
                 D.append(-1)
 
+    # 리스트를 deque로 변환
+    dq = deque(l)
+
     for i in range(len(D)):
-        if len(l) == 0:
+        if not dq:
             print("error")
             return
-        l.pop(D[i])
+        dq.popleft() if D[i] == 0 else dq.pop()
 
     if r % 2 == 1:
-        l = l[::-1]
-        print("[",end="")
-        for i in range(len(l)):
-            print(l[i], end="")
-            if i != len(l)-1:
+        dq = list(dq)[::-1]
+        print("[", end="")
+        for i in range(len(dq)):
+            print(dq[i], end="")
+            if i != len(dq)-1:
                 print(",", end="")
         print("]")
-
     else:
         print("[", end="")
-        for i in range(len(l)):
-            print(l[i], end="")
-            if i != len(l)-1:
+        for i in range(len(dq)):
+            print(dq[i], end="")
+            if i != len(dq)-1:
                 print(",", end="")
         print("]")
-
 
 for _ in range(N):
     do = input().rstrip()
     n = int(input())
 
-    #리스트
+    # 리스트
     s = input().rstrip()
     lst = []
     if len(s) > 2:

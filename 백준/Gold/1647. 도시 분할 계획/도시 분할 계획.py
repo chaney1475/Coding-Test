@@ -1,39 +1,34 @@
 import sys
-import heapq
-
 input = sys.stdin.readline
 
-N,M = map(int,input().split())
-
-node = []
-rep = [i for i in range(N+1)]
-
-for _ in range(M):
-    a,b,c = map(int,  input().split())
-    heapq.heappush(node,[c,a,b])
-
-
-ans = 0
-i = 0
-
-def find(a):
-    if not rep[a] == a:
-        rep[a] = find(rep[a])
-    return rep[a]
+def find(n):
+    if parent[n] != n:                  # 노드 n의 부모노드가 자기자신이 아니면
+        parent[n] = find(parent[n])     # 노드 n의 부모노드 = 최상위 부모노드 탐색 재귀함수
+    return parent[n]                    # 현재노드 n의 최상위 부모노드 return
 
 def union(a, b):
-    A = find(a)
-    B = find(b)
-    if B < A:
-        A,B = B,A
-    rep[B] = A
+    a = find(a)         # 노드 a의 최상위 노드 탐색
+    b = find(b)         # 노드 b의 최상위 노드 탐색
+    if a < b:           # a < b 이면
+        parent[b] = a   # 노드b의 부모노드 a로 갱신
+    else:               # a > b 이면
+        parent[a] = b   # 노드a의 부모노드 b로 갱신
 
-while i < N-2:
-    dist, a, b = heapq.heappop(node)
-    if find(a) == find(b):
-        continue
-    ans += dist
-    union(a,b)
-    i += 1
 
-print(ans)
+N, M = map(int, input().split())
+
+edges = []
+parent = list(range(N + 1))
+for _ in range(M):
+    A, B, C = map(int, input().split())
+    edges.append((A, B, C))
+edges.sort(key=lambda x: x[2])
+
+answer = 0
+last_edge = 0
+for a, b, c in edges:
+    if find(a) != find(b):
+        union(a, b)
+        answer += c
+        last_edge = c
+print(answer - last_edge)

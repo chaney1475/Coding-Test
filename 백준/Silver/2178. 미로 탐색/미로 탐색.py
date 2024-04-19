@@ -1,42 +1,30 @@
 import sys
-
-input = sys.stdin.readline
 from collections import deque
+input = sys.stdin.readline
 
-n, m = map(int, input().split())
+N,M = map(int, input().split())
 
 A = []
+for _ in range(N):
+    A.append(list(map(int, input().rstrip())))
 
-visited = [[False] * m for _ in range(n)]
+visited = [[False] * M for _ in range(N)]
+dx = [0,1,0,-1]
+dy = [1,0,-1,0]
 
-queue = deque()
+def bfs():
+    q = deque()
+    q.append([0,0,1])
 
-for _ in range(n):
-    row_input = input().rstrip()
-    row = [int(k) for k in row_input]
-    A.append(row)
+    while q:
+        x,y,d = q.popleft()
+        if x == N-1 and y == M-1:
+            return d
+        for i in range(4):
+            nx = dx[i] + x
+            ny = dy[i] + y
+            if 0 <= nx < N and 0 <= ny < M and A[nx][ny] == 1 and not visited[nx][ny]:
+                visited[nx][ny] = True
+                q.append([nx,ny,d+1])
 
-
-def check(a, b, s):
-    if n > a >= 0 and m > b >= 0 and A[a][b] == 1 and not visited[a][b]:
-        queue.append((a, b))
-        A[a][b] += s
-        visited[a][b] = True
-
-
-def BFS():
-    queue.append((0, 0))
-    visited[0][0] = True
-    while queue:
-        popleft = queue.popleft()
-        a = popleft[0]
-        b = popleft[1]
-        if a == n - 1 and b == m - 1:
-            return A[a][b]
-        check(a - 1, b, A[a][b])
-        check(a + 1, b, A[a][b])
-        check(a, b - 1, A[a][b])
-        check(a, b + 1, A[a][b])
-
-
-print(BFS())
+print(bfs())

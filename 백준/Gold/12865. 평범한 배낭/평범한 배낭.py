@@ -1,26 +1,25 @@
 import sys
+
 input = sys.stdin.readline
 
-#갯수, 최대 무게
 N, K = map(int, input().split())
 
-w = [0]
-v = [0]
-
+bag = []
 for _ in range(N):
-    a,b = map(int, input().split())
-    w.append(a)
-    v.append(b)
+    bag.append(list(map(int, input().split())))
 
-dp = [[0] * (1+K) for _ in range(N+1)]
+dp = [[0] * (K+1) for _ in range(N)]
 
-for i in range(1, N+1):
-    cur_w = w[i]
-    cur_v = v[i]
-    for j in range(1, K+1):
-        if j - cur_w < 0:
+w,v = bag[0]
+for i in range(w, K+1):
+    dp[0][i] = v
+
+for i in range(1,N):
+    W,V = bag[i]
+    for j in range(1,K+1):
+        if j < W:
             dp[i][j] = dp[i-1][j]
         else:
-            dp[i][j] = max(dp[i-1][j], cur_v + dp[i-1][j-cur_w])
+            dp[i][j] = max(dp[i - 1][j - W] + V, dp[i - 1][j])
 
-print(dp[N][K])
+print(max(dp[N-1]))

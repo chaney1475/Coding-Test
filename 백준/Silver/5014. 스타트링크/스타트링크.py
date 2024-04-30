@@ -1,29 +1,27 @@
 import sys
 from collections import deque
 
-input = sys.stdin.readline
+f, s, g, u, d = map(int, sys.stdin.readline().split())
+check = [0 for _ in range(f + 1)]
 
-#전체 F층 S에서 시작 G에서 도착
-F,S,G,U,D = map(int,input().split())
-dp = [sys.maxsize] * (F+1)
 
-def bfs(start):
-    q = deque()
-    q.append([start,0])
-    dp[start] = 0
-    while q:
-        now, cnt = q.popleft()
-        if now == G:
-            return
-        if now + U <= F and dp[now + U] > cnt + 1:
-            dp[now + U] = cnt + 1
-            q.append([now+U,cnt+1])
-        if now - D >= 1 and dp[now - D] > cnt + 1:
-            dp[now - D] = cnt +1
-            q.append([now-D,cnt+1])
+def bfs():
+    queue = deque()
+    queue.append(s)
 
-bfs(S)
-if dp[G] == sys.maxsize:
-    print("use the stairs")
-else:
-    print(dp[G])
+    check[s] = 1
+
+    while queue:
+        y = queue.popleft()
+        if y == g:
+            return check[y] - 1
+        else:
+            for x in (y + u, y - d):
+                if (0 < x <= f) and check[x] == 0:
+                    check[x] = check[y] + 1
+                    queue.append(x)
+
+    return "use the stairs"
+
+
+print(bfs())

@@ -13,6 +13,8 @@ def bfs(start):
     dp[start] = 0
     while q:
         now, cnt = q.popleft()
+        if now == G:
+            return
         if now + U <= F and dp[now + U] > cnt + 1:
             dp[now + U] = cnt + 1
             q.append([now+U,cnt+1])

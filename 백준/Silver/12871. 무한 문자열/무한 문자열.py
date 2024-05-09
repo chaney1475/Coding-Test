@@ -17,7 +17,7 @@ for i in range(common_l):
 common_l = len(common)
 
 def check(S):
-    if common_l == 0 or len(S) % common_l != 0:
+    if common_l == 0:
         return False
     for i in range(len(S)):
         if S[i] != common[i % common_l]:

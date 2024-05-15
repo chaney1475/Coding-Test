@@ -1,44 +1,47 @@
 import sys
 from collections import deque
-sys.setrecursionlimit(10000)
-input = sys.stdin.readline
-# 노드 갯수, 에지 개수, 시작점
-N, M, s = map(int, input().split())
 
-A = [[] for _ in range(N + 1)]
+input = sys.stdin.readline
+
+N, M, V = map(int, input().split())
+
+A = [[] for _ in range(N+1)]
 
 for _ in range(M):
-    u, v = map(int, input().split())
-    A[u].append(v)
-    A[v].append(u)
+    a,b = map(int, input().split())
+    A[a].append(b)
+    A[b].append(a)
 
-for i in range(N + 1):
+for i in range(1,N+1):
     A[i].sort()
 
-v_DFS = [False] * (N + 1)
-v_BFS = [False] * (N + 1)
+def dfs(v):
+    for node in A[v]:
+        if not visited[node]:
+            visited[node] = True
+            dfs_answer.append(node)
+            dfs(node)
 
-def DFS(v):
-    print(v, end=" ")
-    v_DFS[v] = True
-    for i in A[v]:
-        if not v_DFS[i]:
-            DFS(i)
-
-
-def BFS(v):
-    queue = deque()
-    queue.append(v)
-    v_BFS[v] = True
-    while queue:
-        node = queue.popleft()
-        print(node, end=" ")
-        for i in A[node]:
-            if not v_BFS[i]:
-                queue.append(i)
-                v_BFS[i] = True
+def bfs(v):
+    q = deque()
+    q.append(v)
+    while q:
+        node = q.popleft()
+        for n in A[node]:
+            if not visited[n]:
+                visited[n] = True
+                bfs_answer.append(n)
+                q.append(n)
 
 
-DFS(s)
-print()
-BFS(s)
+visited = [False] * (N+1)
+dfs_answer = [V]
+visited[V] = True
+dfs(V)
+print(*dfs_answer)
+
+visited = [False] * (N+1)
+bfs_answer = [V]
+visited[V] = True
+bfs(V)
+print(*bfs_answer)

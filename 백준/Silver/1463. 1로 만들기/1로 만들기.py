@@ -1,17 +1,28 @@
 import sys
+from collections import deque
 input = sys.stdin.readline
 
 N = int(input())
+dp = [sys.maxsize] * 1000001
 
-D = [0] * (N+1)
 
-D[1] == 0
+def make_one():
+    q = deque()
+    q.append(N)
+    dp[N] = 0
+    while q:
+        n = q.popleft()
+        if n == 1:
+            print(dp[n])
+            return
+        if n % 2 == 0 and dp[n//2] > dp[n] + 1:
+            dp[n//2] = dp[n] + 1
+            q.append(n//2)
+        if n % 3 == 0 and dp[n//3] > dp[n] + 1:
+            dp[n//3] = dp[n] + 1
+            q.append(n//3)
+        if n - 1 > 0 and dp[n-1] > dp[n] + 1:
+            dp[n-1] = dp[n] + 1
+            q.append(n-1)
 
-for i in range(2,N+1):
-    D[i] = D[i-1] + 1
-    if i % 2 == 0:
-        D[i] = min(D[i//2]+1, D[i])
-    if i % 3 == 0:
-        D[i] = min(D[i//3]+1, D[i])
-
-print(D[N])
+make_one()

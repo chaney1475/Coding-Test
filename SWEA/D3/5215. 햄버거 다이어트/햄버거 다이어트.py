@@ -1,31 +1,31 @@
-test_case = int(input())
+T = int(input())
+
+def check():
+    #하나의 버거에 대해서 더 작은 값이면
+    score, cal = burger[0]
+
+    #초기화
+    for j in range(0,L+1):
+        if cal <= j:
+            dp[0][j] = score
+
+    for i in range(1,len(burger)):
+        score, cal = burger[i]
+        for j in range(0,L+1):
+            if j < cal:
+                dp[i][j] = dp[i-1][j]
+            else:
+                dp[i][j] = max(dp[i-1][j], dp[i-1][j-cal] + score)
 
 
-def dfs(index, x, temp):
-    global sum
-
-    for j in range(index,N):
-        if not visited[j] and x >= material[j][1]:
-            visited[j] = True
-            dfs(j+1, x - material[j][1], temp + material[j][0]) #길이가 가능하면 값 빼고 dfs
-            visited[j] = False
-
-    if sum < temp:
-        sum = temp
-
-for i in range(test_case):
-
-    # N이 종류 l이 제한 길이
+for t in range(1,T+1):
     N, L = map(int, input().split())
-
-    visited = [False] * N
-
-    sum = 0
-    material = []
-    for j in range(N):
-        a, b = map(int, input().split())
-        material.append((a, b))
-
-    dfs(0, L, 0)
-
-    print(f"#{i+1} {sum}")
+    dp = [[0] * (L+1) for _ in range(N)]
+    burger = []
+    for _ in range(N):
+        #점수, 칼로리
+        a,b = map(int, input().split())
+        burger.append([a,b])
+    check()
+    answer = max(dp[N-1])
+    print(f"#{t} {answer}")

@@ -1,26 +1,21 @@
-t = int(input())
-
+T = int(input())
 
 def check():
-    # 현재 초수에 가능한 량
-    # 사람수가 팔린양 -> i
+    for i in range(max_second):
+        time[i] = K * (i // M)
+    total = 0
     for i in range(N):
-        made = (A[i] // M) * K
-        if made - (i + 1) < 0:
-            return False
-    return True
+        total += 1
+        if total > time[customer[i]]:
+            return "Impossible"
+    return "Possible"
 
-
-for test_case in range(1, t + 1):
-
-    # 사람수, M초 후 K개
+for t in range(1,T+1):
+    #오는 사람, 초수, 전체 붕어빵
     N, M, K = map(int, input().split())
-    # 도착시간
-    A = list(map(int, input().split()))
-
-    A.sort()
-
-    if check():
-        print(f"#{test_case} Possible")
-    else:
-        print(f"#{test_case} Impossible")
+    customer = list(map(int, input().split()))
+    customer.sort()
+    max_second = max(customer) + 1
+    time = [0] * max_second
+    answer = check()
+    print(f'#{t} {answer}')

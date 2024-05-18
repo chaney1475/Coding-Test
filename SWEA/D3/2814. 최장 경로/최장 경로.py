@@ -1,32 +1,40 @@
-t = int(input())
+T = int(input())
 
 
-def dfs(n, d):
-    global max
-    for i in A[n]:
+def dfs(cnt, start):
+    global l_node
+    global l_cnt
+    if cnt > l_cnt:
+        l_node = start
+        l_cnt = cnt
+    for i in node[start]:
         if not visited[i]:
             visited[i] = True
-            dfs(i, d + 1)
+            dfs(cnt + 1, i)
             visited[i] = False
-    if d > max:
-        max = d
 
 
-for test in range(1, t + 1):
-    max = 0
-    N, M = map(int, input().split())  # 노드수 간선수
-    A = [[] for _ in range(N + 1 + 1)]
+
+for t in range(1,T+1):
+    N, M = map(int, input().split())
+    node = [[] for _ in range(N+1)]
+
+    for _ in range(M):
+        a,b = map(int,input().split())
+        node[a].append(b)
+        node[b].append(a)
+
+
     visited = [False] * (N + 1)
+    l_cnt = -1
+    l_node = -1
+    visited[1] = True
+    dfs(1,1)
 
-    for m in range(M):
-        u, v = map(int, input().split())
-        A[u].append(v)
-        A[v].append(u)
-
-    if N == 1 or M == 0:
-        max = 1
-    else:
-        for i in range(1, N+1):
-            dfs(i, 0)
-
-    print(f"#{test} {max}")
+    starts = l_node
+    l_cnt = -1
+    l_node = -1
+    visited = [False] * (N + 1)
+    visited[starts] = True
+    dfs(1, starts)
+    print(f"#{t} {l_cnt}")

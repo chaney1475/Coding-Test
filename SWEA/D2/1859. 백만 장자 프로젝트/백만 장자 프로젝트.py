@@ -1,20 +1,20 @@
-#백만장자 프로젝트
+T = int(input())
 
-t = int(input())
-
-for test_case in range(1, t+1):
+for t in range(1,T+1):
     N = int(input())
     A = list(map(int, input().split()))
-    B = []
-    answer = 0
-    for i in A[::-1]:
-        if not B:
-            B.append(i)
-            continue
-        if B[-1] > i:
-            answer += (B[-1] - i)
-        else:
-            B.pop()
-            B.append(i)
+    max_num = [0] * N
 
-    print(f"#{test_case} {answer}")
+    biggest = A[-1]
+
+    for i in range(N-1,-1,-1):
+        if A[i] > biggest:
+            biggest = A[i]
+        max_num[i] = biggest
+
+    total = 0
+
+    for i in range(N):
+        total += (max_num[i] - A[i])
+
+    print(f"#{t} {total}")

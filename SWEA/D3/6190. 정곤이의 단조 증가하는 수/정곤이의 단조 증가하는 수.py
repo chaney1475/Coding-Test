@@ -1,30 +1,26 @@
-#단조증가하는 수
-
 T = int(input())
+from itertools import combinations
 
 
-def check(n):
-    former = 0
-    for c in str(n):
-        if int(c) < former:
+def check(x):
+    start = 10
+    while x != 0:
+        if start < x % 10:
             return False
-        former = int(c)
-
+        start = x % 10
+        x = x // 10
     return True
 
 
-for test_case in range(1, T+1):
+for t in range(1, T + 1):
     N = int(input())
-    A = list(map(int, input().split()))
-    A.sort()
-    B = A[::-1]
-    answer = -1
+    index = [i for i in range(N)]
+    combs = list(combinations(index, 2))
+    num = list(map(int, input().split()))
+    max_ans = -1
+    for a, b in combs:
+        tmp = num[a] * num[b]
+        if tmp > max_ans and check(tmp):
+            max_ans = tmp
 
-    for i in range(0, N):
-        for j in range(i+1, N):
-            k = B[i] * B[j]
-            if check(k):
-                if answer < k:
-                    answer = k
-
-    print(f"#{test_case} {answer}")
+    print(f"#{t} {max_ans}")

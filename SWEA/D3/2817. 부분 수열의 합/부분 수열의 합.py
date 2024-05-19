@@ -1,26 +1,23 @@
-# 부분수열의 합
-t = int(input())
+T = int(input())
 
 
-def dfs(index, sum):
+def dfs(start, tmp):
     global answer
 
-    if sum == 0:
-        answer += 1
+    if start == N - 1:
+        # 마지막 인덱스에 다다름
+        if tmp == K:
+            answer += 1
         return
-    if index == N:
-        return
-
-    for i in range(index, N):
-        if sum >= A[i]:
-            dfs(i+1, sum - A[i])
+    dfs(start + 1, tmp)
+    dfs(start + 1, tmp + A[start + 1])
 
 
-for test in range(1, t + 1):
-    answer = 0
+for t in range(1, T + 1):
     N, K = map(int, input().split())
+    # 수열
     A = list(map(int, input().split()))
-
-    dfs(0, K)
-
-    print(f"#{test} {answer}")
+    visited = [False] * N
+    answer = 0
+    dfs(-1, 0)
+    print(f"#{t} {answer}")

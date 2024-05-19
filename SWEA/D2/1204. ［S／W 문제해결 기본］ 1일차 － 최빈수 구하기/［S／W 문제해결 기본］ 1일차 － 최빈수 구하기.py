@@ -1,11 +1,24 @@
-#최빈수
-from collections import Counter
-t = int(input())
+T = int(input())
 
-for _ in range(1,t+1):
-    N = input()
-    A = Counter(list(map(int, input().split())))
-    sort_A = sorted(A.items(), key=lambda x : x[1], reverse=True)
+for t in range(1, T+1):
+    t = int(input())
+    student = list(map(int, input().split()))
+    score = [0] * 101
+    for s in student:
+        score[s] += 1
 
-    print(f"#{N} {sort_A[0][0]}")
+    ll = []
 
+    for i in range(1, 101):
+        ll.append([score[i], i])
+
+    ll.sort(reverse=True)
+    max_cnt = ll[0][0]
+    maxs = []
+    for cnt, num in ll:
+        if cnt == max_cnt:
+            maxs.append(num)
+        else:
+            break
+
+    print(f"#{t} {max(maxs)}")

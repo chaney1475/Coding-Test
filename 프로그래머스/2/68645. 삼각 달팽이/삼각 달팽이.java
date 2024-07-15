@@ -18,7 +18,7 @@ class Solution {
         
         // 한변의 길이 시작 n-i
         for(int i = n; i > 0; i--) {
-        	for(int j = 1; j < i+1; j++) {
+        	for(int j = 1; j <= i; j++) {
         		if(flag == 0) {
             		x++;
             	} else if(flag == 1) {

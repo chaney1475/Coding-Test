@@ -1,9 +1,10 @@
 import java.io.BufferedReader;
-import java.io.FileInputStream;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
-import java.util.stream.IntStream;
+import java.io.OutputStreamWriter;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class Main {
     static int[] array;
@@ -25,26 +26,30 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        N = Integer.parseInt(br.readLine());// 숫자 한개 받기
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        
+        N = Integer.parseInt(br.readLine()); // 숫자 한개 받기
         StringTokenizer st = new StringTokenizer(br.readLine());
         array = new int[N];
         for (int i = 0; i < N; i++) {
             array[i] = Integer.parseInt(st.nextToken());
         }
-        array = Arrays.stream(array).sorted().toArray();
+        Arrays.sort(array); // 배열 정렬
 
-        int cnt = Integer.parseInt(br.readLine());// 확인 갯수
+        int cnt = Integer.parseInt(br.readLine()); // 확인 갯수
         st = new StringTokenizer(br.readLine());
         int[] check = new int[cnt];
-        for(int i = 0; i< cnt; i ++){
+        for(int i = 0; i< cnt; i++){
             check[i] = Integer.parseInt(st.nextToken());
         }
 
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < cnt; i++) {
-            System.out.println(BSearch(check[i]));
+            sb.append(BSearch(check[i])).append('\n');
         }
-
-
+        
+        bw.write(sb.toString());
+        bw.flush();
+        bw.close();
     }
 }

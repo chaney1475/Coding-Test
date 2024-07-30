@@ -1,77 +1,61 @@
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-
 public class Solution {
+    private static final int dx[] = {0, -1, 1, 0};
+    private static final int dy[] = {-1, 0, 0, 1};
 
-    static int[] dx = {1, 0, -1, 0};
-    static int[] dy = {0, 1, 0, -1};
+    private boolean isNextToVolunteer(char[][] room, int x, int y, int exclude) {
+        for (int d = 0; d < 4; d++) {
+            if (d == exclude) continue;
 
-    static class Person {
-        int x, y, dist;
-        public Person(int x, int y, int dist) {
-            this.x = x;
-            this.y = y;
-            this.dist = dist;
+            int nx = x + dx[d];
+            int ny = y + dy[d];
+            if (ny < 0 || ny >= room.length || nx < 0 || nx >= room[ny].length)
+                continue;
+            if (room[ny][nx] == 'P') return true;
         }
+        return false;
+    }
+
+    private boolean isDistanced(char[][] room, int x, int y) {
+        for (int d = 0; d < 4; d++) {
+            int nx = x + dx[d];
+            int ny = y + dy[d];
+            if (ny < 0 || ny >= room.length || nx < 0 || nx >= room[ny].length)
+                continue;
+
+            switch (room[ny][nx]) {
+                case 'P': return false;
+                case 'O':
+                    if (isNextToVolunteer(room, nx, ny, 3- d)) return false;
+                    break;
+            }
+        }
+        return true;
+    }
+
+    private boolean isDistanced(char[][] room) {
+        for (int y = 0; y < room.length; y++) {
+            for (int x = 0; x < room[y].length; x++) {
+                if (room[y][x] != 'P') continue;
+                if (!isDistanced(room, x, y)) return false;
+            }
+        }
+        return true;
     }
 
     public int[] solution(String[][] places) {
         int[] answer = new int[places.length];
-        for (int i = 0; i < places.length; i++) {
-            answer[i] = check_dist(places[i]);
+        for (int i = 0; i < answer.length; i++) {
+            String[] place = places[i];
+            char[][] room = new char[place.length][];
+            for (int j = 0; j < room.length; j++) {
+                room[j] = place[j].toCharArray();
+            }
+            if (isDistanced(room)) {
+                answer[i] = 1;
+            } else {
+                answer[i] = 0;
+            }
         }
         return answer;
-    }
-
-    public int check_dist(String[] session) {
-        int n = session.length;
-        char[][] sits = new char[n][n];
-        for (int i = 0; i < n; i++) {
-            sits[i] = session[i].toCharArray();
-        }
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (sits[i][j] == 'P') {
-                    if (!isSafe(sits, n, i, j)) {
-                        return 0;
-                    }
-                }
-            }
-        }
-        return 1;
-    }
-
-    private boolean isSafe(char[][] sits, int n, int startX, int startY) {
-        Queue<Person> queue = new LinkedList<>();
-        boolean[][] visited = new boolean[n][n];
-        queue.add(new Person(startX, startY, 0));
-        visited[startX][startY] = true;
-
-        while (!queue.isEmpty()) {
-            Person person = queue.poll();
-            int x = person.x;
-            int y = person.y;
-            int dist = person.dist;
-
-            if (dist > 0 && sits[x][y] == 'P') {
-                return false;
-            }
-
-            if (dist >= 2) continue;
-
-            for (int k = 0; k < 4; k++) {
-                int nx = x + dx[k];
-                int ny = y + dy[k];
-
-                if (nx >= 0 && nx < n && ny >= 0 && ny < n && !visited[nx][ny] && sits[nx][ny] != 'X') {
-                    queue.add(new Person(nx, ny, dist + 1));
-                    visited[nx][ny] = true;
-                }
-            }
-        }
-
-        return true;
     }
 }

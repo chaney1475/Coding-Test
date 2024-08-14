@@ -1,7 +1,9 @@
+
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 public class Main { // 구간 합 구하기 4
@@ -12,11 +14,12 @@ public class Main { // 구간 합 구하기 4
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
 		N = Integer.parseInt(st.nextToken()); // N개의 숫자
-		M = Integer.parseInt(st.nextToken()); // M 번 물어볼것
+		M = Integer.parseInt(st.nextToken()); // M 번 물어볼 것
 		
 		st = new StringTokenizer(br.readLine());
 		
@@ -35,12 +38,14 @@ public class Main { // 구간 합 구하기 4
 			int kk = Integer.parseInt(st.nextToken());
 			if (k == 1) {
 				answer = dp[kk-1];
-			}
-			else
+			} else {
 				answer = dp[kk-1] - dp[k-2];
-			System.out.println(answer);
+			}
+			bw.write(answer + "\n");
 		}
 		
+		bw.flush(); // 버퍼에 남은 데이터를 모두 출력
+		bw.close(); // BufferedWriter 닫기
+		br.close(); // BufferedReader 닫기
 	}
-	
 }

@@ -1,60 +1,61 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Solution {
-	
-	static int N;
-	static int[][] bugger;
-	static int answer;
-	static int limit;
-	public static void main(String[] args) throws IOException{;
-	
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		StringTokenizer st;
-		
-		int T = Integer.parseInt(br.readLine());
-		
-		for (int t = 1; t <= T; t++) {
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static StringBuilder res = new StringBuilder();
+    static int N, list[];
 
-			st = new StringTokenizer(br.readLine());
-			
-			N = Integer.parseInt(st.nextToken());
-
-			limit = Integer.parseInt(st.nextToken());
-			
-			answer = 0;
-			
-			bugger = new int[N][2];
-
-			for (int i = 0; i < N; i++) {
-				st = new StringTokenizer(br.readLine());
-				bugger[i][0] = Integer.parseInt(st.nextToken());
-				bugger[i][1] = Integer.parseInt(st.nextToken());
-				
-			}
-			
-			make(0, 0, 0);
-			System.out.printf("#%d %d\n",t ,answer);
-		}
-		
-	}
-	public static void make(int index, int taste, int calo) {
-		
-		if (index == N) {
-			// 끝까지 온 경우
-			if (taste > answer)
-				answer = taste;
-			
-			return;
-		}
-        
-		if (bugger[index][1] + calo <= limit)
-			make(index + 1 , bugger[index][0] + taste , bugger[index][1] + calo);
-
-		make(index + 1 ,taste , calo);
-		
-	}
+    public static void main(String[] args) throws IOException {
+        int TC = Integer.parseInt(br.readLine());
+        for (int tc = 1; tc <= TC; tc++) {
+            int ans = 0;
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            N = Integer.parseInt(st.nextToken());
+            int L = Integer.parseInt(st.nextToken());
+            int[][] matrix = new int[N][2];
+            for (int i = 0; i < N; i++) {
+                st = new StringTokenizer(br.readLine());
+                matrix[i][0] = Integer.parseInt(st.nextToken());
+                matrix[i][1] = Integer.parseInt(st.nextToken());
+            }
+            
+            for (int i = 1; i <= N; i++) {
+                list = new int[N];
+                Arrays.fill(list, N - i, N, 1);
+                
+                while(true) {
+                    int val = 0;
+                    int cal = 0;
+                    
+                    for(int j = 0; j < N; j++) {
+                        val += list[j] * matrix[j][0];
+                        cal += list[j] * matrix[j][1];
+                    }
+                    
+                    if(cal <= L) ans = Math.max(ans, val);
+                    if(!np()) break;
+                }
+            }
+            
+            res.append(String.format("#%d %d\n", tc, ans));
+        }
+        System.out.println(res.toString());
+    }
+    
+    static boolean np() {
+        int pivot = N - 2;
+        while(pivot >= 0 && list[pivot] >= list[pivot + 1]) pivot--;
+        if(pivot < 0) return false;
+        int pointer = N - 1;
+        while(list[pointer] == 0) pointer--;
+        list[pivot] = 1;
+        list[pointer] = 0;
+        for (int i = 1; i <= (N - 1 - pivot) / 2; i++) {
+            int temp = list[pivot + i];
+            list[pivot + i] = list[N - i];
+            list[N - i] = temp;
+        }
+        return true;
+    }
 }

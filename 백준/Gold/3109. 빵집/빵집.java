@@ -45,17 +45,17 @@ public class Main {
 
 		// 다음으로 진행할 수 있는 경우
 		if (y + 1 < M && x - 1 >= 0 && grid[x - 1][y + 1] == '.') {
-			grid[x - 1][y + 1] = (char) (answer + 48);
+			grid[x - 1][y + 1] = 'V';
 			if( hasPath(x - 1, y + 1)) return true;
 		}
 
 		if (y + 1 < M && grid[x][y + 1] == '.') {
-			grid[x][y + 1] = (char) (answer + 48);
+			grid[x][y + 1] = 'V';
 			if( hasPath( x, y + 1)) return true;
 		}
 
 		if (y + 1 < M && x + 1 < N && grid[x + 1][y + 1] == '.') {
-			grid[x + 1][y + 1] = (char) (answer + 48);
+			grid[x + 1][y + 1] = 'V';
 			if ( hasPath( x + 1, y + 1)) return true;
 		}
 		

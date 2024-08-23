@@ -108,13 +108,16 @@ public class Solution {
 				}
 				
 			}
-			System.out.printf("#%d ", t);
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append("#" + t+ " ");
 			for (int i = 0; i < H; i++) {
 				for (int j = 0; j < W; j++) {
-					System.out.print(grid[i][j]);
+					sb.append(grid[i][j]);
 				}
-				System.out.println();
+				sb.append("\n");
 			}
+			System.out.print(sb);
 
 		}
 

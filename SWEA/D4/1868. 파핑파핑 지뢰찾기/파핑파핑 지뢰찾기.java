@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
@@ -38,6 +37,7 @@ public class Solution {
 				}
 			}
 		}
+		
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
 				// 방문이 안되어있고 -1이 아닌 경우
@@ -91,9 +91,9 @@ public class Solution {
 			visited = new boolean[N][N];
 
 			for (int i = 0; i < N; i++) {
-				String s[] = br.readLine().trim().split("");
+				String s = br.readLine();
 				for (int j = 0; j < N; j++) {
-					grid[i][j] = s[j].charAt(0);
+					grid[i][j] = s.charAt(j);
 				}
 			}
 

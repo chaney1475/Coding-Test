@@ -1,58 +1,86 @@
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
-    static int n, m;
-    static int[][] graph;
-    static int[][] pos = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
-    static boolean[][] visited;
 
-    static int bfs(int x, int y) {
-        Queue<int[]> q = new LinkedList<>();
-        q.add(new int[]{x, y, 1});
-        visited[x][y] = true;
+	static class Position {
+		int x;
+		int y;
+		int dist;
 
-        while (!q.isEmpty()) {
-            int[] arr = q.poll();
-            int nowX = arr[0];
-            int nowY = arr[1];
-            int nowD = arr[2];
+		Position(int x, int y, int dist) {
+			this.x = x;
+			this.y = y;
+			this.dist = dist;
+		}
+	}
 
-            if (nowX == n - 1 && nowY == m - 1) {
-                return nowD;
-            }
+	static int grid[][];
+	static int cnt[][];
 
-            for (int i = 0; i < 4; i++) {
-                int nextX = nowX + pos[i][0];
-                int nextY = nowY + pos[i][1];
+	static int[] dx = {0,0,-1,1};
+	static int[] dy = {1,-1,0,0};
+	
+	public static void main(String[] args) throws IOException {
+		// 미로 탐색
 
-                if (nextX >= 0 && nextX < n && nextY >= 0 && nextY < m
-                        && graph[nextX][nextY] == 1 && !visited[nextX][nextY]) {
-                    q.add(new int[]{nextX, nextY, nowD + 1});
-                    visited[nextX][nextY] = true;
-                }
-            }
-        }
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-        return -1; // 경로를 찾지 못한 경우
-    }
+		
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+		grid = new int[N][M];
+		
+		cnt = new int[N][M];
+		
+		for (int i = 0; i < N; i++) {
+			Arrays.fill(cnt[i], Integer.MAX_VALUE);
+		}
+		
+		for (int i = 0; i < N; i++) {
+			String s = br.readLine();
+			for (int j = 0; j < M; j++) {
+				grid[i][j] = s.charAt(j) - '1' + 1;
+			}
+		}
+		
+		
+		Queue<Position> q = new LinkedList<>();
+		
+		// 무조건 N-1, M-1까지 가야함
+		q.offer(new Position(0,0,1));
+		
+		while(!q.isEmpty()) {
+			Position p = q.poll();
+			int x = p.x;
+			int y = p.y;
+			
+			int nx;
+			int ny;
+			int nd = p.dist + 1;
+			
+			for (int d = 0; d < 4; d++) {
+				nx = x + dx[d];
+				ny = y + dy[d];
+				
+				if (nx >=0 && nx < N && ny >=0 && ny < M && grid[nx][ny] == 1) {
+					//1로 경로가 있는 경우에
+					if (cnt[nx][ny] > nd) {
+						cnt[nx][ny] = nd;
+						q.add(new Position(nx, ny, nd));
+					}
+				}
+			}
+			
+		}
+		System.out.println(cnt[N-1][M-1]);
+	}
 
-        n = sc.nextInt();
-        m = sc.nextInt();
-        sc.nextLine();
-        graph = new int[n][m];
-        visited = new boolean[n][m];
-
-        for (int i = 0; i < n; i++) {
-            String line = sc.nextLine();
-            for (int j = 0; j < m; j++) {
-                graph[i][j] = line.charAt(j) - '0'; // 문자를 숫자로 변환
-            }
-        }
-
-
-        System.out.println(bfs(0, 0));
-    }
 }

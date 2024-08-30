@@ -98,13 +98,15 @@ public class Solution {
 	        if (i < 0 || j < 0 || i >= N || j >= N) { // 가장자리에 도달한 경우
                 make(cnt + 1, next, success + 1, total + len);
             }
-	        i = x + dx[d];
-            j = y + dy[d];
-          for (int k = 0; k < len; k++) {
-              next[i][j] = 0;
-              i += dx[d];
-              j += dy[d];
+	       if (dx[d] == 0) {
+              System.arraycopy(ori[x], 0, next[x], 0, N);
           }
+          if (dy[d] == 0) {
+              for (int row = 0; row < N; row++) {
+                  next[row][y] = ori[row][y];
+              }
+          }
+            
 	    }
 
 		// 아무것도 안하는 경우

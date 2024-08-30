@@ -1,11 +1,5 @@
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Solution {
 
@@ -13,12 +7,10 @@ public class Solution {
 	static class Edge implements Comparable<Edge>{
 
 		int x;
-		int y;
 		long weight;
 		
-		Edge(int x, int y, long weight){
+		Edge(int x, long weight){
 			this.x = x;
-			this.y = y;
 			this.weight = weight;
 		}
 		
@@ -54,17 +46,15 @@ public class Solution {
 			st = new StringTokenizer(br.readLine());
 			N = Integer.parseInt(st.nextToken());
 
-			q = new PriorityQueue<>();
-
-			rep = new int[N + 1];
-			
-			for (int i = 1; i < N + 1; i++) {
-				rep[i] = i;
-			}
-			
-			E = N * (N + 1) / 2;
+			boolean[] visited = new boolean[N + 1]; 
 			
 			List<long[]> islands = new ArrayList<>();
+			
+			List<Edge>[] graph = new ArrayList[N+1];
+			
+			for (int i = 0; i < N+1; i++) {
+				graph[i] = new ArrayList<>();
+			}
 			
 			String[] islandX = br.readLine().split(" ");
 			String[] islandY = br.readLine().split(" ");
@@ -75,8 +65,10 @@ public class Solution {
 
 			for (int i = 0; i < N - 1; i++) {
 				for (int j = i + 1;  j < N; j++) {
+					
 					long a = islands.get(i)[0];
 					long b = islands.get(i)[1];
+					
 					long c = islands.get(j)[0];
 					long d = islands.get(j)[1];
 					
@@ -84,21 +76,34 @@ public class Solution {
 					
 					long l2 = Math.abs(b-d);
 					
-					q.offer(new Edge(i, j, (long) Math.pow(l1, 2) + (long) Math.pow(l2, 2)));
+					
+					graph[i].add(new Edge(j,(long) Math.pow(l1, 2) + (long) Math.pow(l2, 2)));
+					graph[j].add(new Edge(i,(long) Math.pow(l1, 2) + (long) Math.pow(l2, 2)));
+					
 				}
 			}
 			
 			d = Double.parseDouble(br.readLine());
-					
-			// 사이클 확인 (union-find)
 	    	double weight = 0L;
-	        while(!q.isEmpty()) {
-	            Edge cur = q.poll(); // 가중치가 가장 작은 간선
-	            // 부모노드가 다를때만 (사이클X)
-	            if(union(cur.x, cur.y)) {
-	                weight += cur.weight;
-	            }
-	        }
+
+	    	q = new PriorityQueue<>();
+	    	q.offer(new Edge(0, 0));
+	    	
+	    	while(!q.isEmpty()) {
+	    		Edge e = q.poll();
+	    		int v = e.x;
+	    		long w = e.weight;
+	    		
+	    		if (visited[v]) continue;
+	    		
+	    		visited[v] = true;
+	    		weight += w;
+	    		
+	    		for (Edge n : graph[v]) {
+	    			if(!visited[n.x]) q.add(n);
+	    		}
+	    		
+	    	}
 	        
 	        weight *= d;
 	        weight += 0.5d;
@@ -106,26 +111,6 @@ public class Solution {
 			System.out.printf("#%d %d\n", t, (long) weight);
 
 		}
-	}
-
-	static boolean union(int x, int y) {
-		x = find(x);
-		y = find(y);
-		if (x == y) {
-			return false;
-		}
-		if (x <= y)
-			rep[y] = x;
-		else
-			rep[x] = y;
-		return true;
-	}
-
-	static int find(int x) {
-		if (x != rep[x]) {
-			rep[x] = find(rep[x]);
-		}
-		return rep[x];
 	}
 
 }

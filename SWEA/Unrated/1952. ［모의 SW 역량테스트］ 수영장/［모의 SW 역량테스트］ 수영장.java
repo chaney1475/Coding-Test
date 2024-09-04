@@ -1,82 +1,51 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
 public class Solution {
-	static int[] cost;
-	static int[] month;
-	static boolean[] visited;
-	static int answer;
+    static int[] fee = new int[4]; 
+    static int[] date = new int[14];
+    static int[] plan = new int[13];
 
-	public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+        
+        int T = Integer.parseInt(br.readLine());
+        for(int t = 1; t <= T; t++) {
+            st = new StringTokenizer(br.readLine());
+            for(int i = 2; i < 14; i++) date[i] = Integer.MAX_VALUE;
+            for(int i = 0; i < 4; i++) fee[i] = Integer.parseInt(st.nextToken());
+            st = new StringTokenizer(br.readLine());
+            for(int i = 1; i < 13; i++) plan[i] = Integer.parseInt(st.nextToken());
+            
+            //date[n]은 n전 날까지의 최소 비용
+            // 즉 n+1일 n일의 최소값임
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
+//            System.out.println(Arrays.toString(date));
+            for(int n = 0; n < 13; n++) {
+            	if(n+1 <= 13 && fee[0] * plan[n] + date[n] < date[n+1]) {
+                    date[n+1] = fee[0] * plan[n] + date[n];
+                }
+                //1달권
+                if(n+1 <= 13 && fee[1] + date[n] < date[n+1]) {
+                    date[n+1] = fee[1] + date[n];
+                }
+                //3달권
+                if(n+3 <= 13 && fee[2] + date[n] < date[n+3]) {
+                    date[n+3] = fee[2] + date[n];
+                }
+                //1년권
+                if(n+12 <= 13 && fee[3] + date[n] < date[n+12]) {
+                    date[n+12] = fee[3] + date[n];
+                }
+//               System.out.println(Arrays.toString(date));
+            }
+            
+            
+            System.out.printf("#%d %d\n", t, date[13]);
+        }
+        
 
-		int T = Integer.parseInt(br.readLine());
-
-		for (int t = 1; t <= T; t++) {
-			cost = new int[4]; // 1일 / 1달 / 3달 / 1년
-
-			st = new StringTokenizer(br.readLine());
-			for (int i = 0; i < 4; i++) {
-				cost[i] = Integer.parseInt(st.nextToken());
-			}
-
-			month = new int[12];
-			visited = new boolean[12];
-
-			st = new StringTokenizer(br.readLine());
-			for (int i = 0; i < 12; i++) {
-				month[i] = Integer.parseInt(st.nextToken());
-				if (month[i] == 0) {
-					visited[i] = true;
-				}
-			}
-
-			answer = Integer.MAX_VALUE;
-
-			// visited 가 false인 부분을 방문
-
-			for (int i = 0; i < 12; i++) {
-				// 방문 해야하는 곳 부터 방문
-				if (!visited[i]) {
-					make(i, 0);
-					break;
-				}
-			}
-
-			System.out.printf("#%d %d\n", t, answer);
-
-		}
-
-	}
-
-	static void make(int index, int total) {
-
-		if (index >= 12) {
-			// 모두 커버 헸음
-			if (answer > total) {
-				answer = total;
-			}
-			return;
-		}
-		
-		if (visited[index]) {
-			// 할필요 없는 경우 한달 전진
-			make(index + 1, total);
-
-		}
-
-		// 1일 권
-		make(index + 1, total + cost[0] * month[index]);
-		// 1달 권
-		make(index + 1, total + cost[1]);
-		// 3달 권
-		make(index + 3, total + cost[2]);
-		// 1년권
-		make(index + 12, total + cost[3]);
-	}
+    }
 
 }

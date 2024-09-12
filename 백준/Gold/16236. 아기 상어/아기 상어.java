@@ -2,123 +2,124 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    static StringTokenizer st;
 
-    // 아기 상어
-    static int N, M;
-    static int[][] grid;
+	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static StringTokenizer st;
 
-    static class Baby {
-        int x, y, size, eating;
+	static int N;
+	static int[][] grid;
 
-        Baby(int x, int y, int size) {
-            this.x = x;
-            this.y = y;
-            this.size = size;
-            this.eating = 0;
-        }
-    }
+	static int babyX;
+	static int babyY;
+	static int eating;
+	static int size;
 
-    static class Position {
-        int x, y, time;
+	static boolean[][] visited;
 
-        Position(int x, int y, int time) {
-            this.x = x;
-            this.y = y;
-            this.time = time;
-        }
-    }
+	static class Position {
+		int x, y, dist;
 
-    static int[] dx = {-1, 0, 0, 1};
-    static int[] dy = {0, -1, 1, 0};
+		Position(int x, int y, int dist) {
+			this.x = x;
+			this.y = y;
+			this.dist = dist;
+		}
+	}
 
-    public static void main(String[] args) throws Exception {
-        N = Integer.parseInt(br.readLine());
+	public static void main(String[] args) throws IOException {
+		// 아기 상어
+		N = Integer.parseInt(br.readLine());
 
-        Baby baby = new Baby(0, 0, 2);
-        grid = new int[N][N];
+		grid = new int[N][N];
 
-        for (int i = 0; i < N; i++) {
-            st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < N; j++) {
-                int temp = Integer.parseInt(st.nextToken());
-                if (temp == 9) {
-                    baby.x = i;
-                    baby.y = j;
-                    grid[i][j] = 0;  // 아기 상어는 빈칸으로 처리
-                } else {
-                    grid[i][j] = temp;
-                }
-            }
-        }
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < N; j++) {
+				int temp = Integer.parseInt(st.nextToken());
+				if (temp == 9) {
+					babyX = i; // 아기 상어 초기화
+					babyY = j;
+					size = 2;
+					eating = 0;
+					continue;
+				}
+				grid[i][j] = temp;
+			}
+		}
 
-        int ans = 0;
-        while (true) {
-            List<Position> eatableFishes = bfs(baby);
-            if (eatableFishes.isEmpty()) break;
+		int time = 0;
+		while (true) {
+			int[] found = findFish(babyX, babyY);
+			if (found[0] == Integer.MAX_VALUE)
+				break;
 
-            Position fish = eatableFishes.get(0);
-            ans += fish.time;
+			// 찾은경우
+			eating++;
+			if (eating == size) {
+				size++;
+				eating = 0;
+			}
 
-            baby.x = fish.x;
-            baby.y = fish.y;
-            baby.eating++;
+			grid[found[0]][found[1]] = 0;
 
-            if (baby.eating == baby.size) {
-                baby.size++;
-                baby.eating = 0;
-            }
+			time += found[2]; // 시간 더하기
 
-            // 물고기 먹은 칸을 빈 칸으로 처리
-            grid[fish.x][fish.y] = 0;
-        }
+			babyX = found[0];
+			babyY = found[1];
+		}
 
-        System.out.println(ans);
-    }
+		System.out.println(time);
 
-    static List<Position> bfs(Baby baby) {
-        Queue<Position> queue = new LinkedList<>();
-        boolean[][] visited = new boolean[N][N];
-        List<Position> eatableFishes = new ArrayList<>();
+	}
 
-        queue.offer(new Position(baby.x, baby.y, 0));
-        visited[baby.x][baby.y] = true;
+	static int[] dx = { 0, 0, -1, 1 };
+	static int[] dy = { -1, 1, 0, 0 };
 
-        int minTime = Integer.MAX_VALUE;
+	static int[] findFish(int i, int j) {
+		int dist = Integer.MAX_VALUE; // 거리 초기화
+		int fx = Integer.MAX_VALUE, fy = Integer.MAX_VALUE; // 위치 초기화
 
-        while (!queue.isEmpty()) {
-            Position now = queue.poll();
+		Queue<Position> q = new LinkedList<>();
+		q.offer(new Position(i, j, 0));
+		visited = new boolean[N][N];
+		visited[i][j] = true;
 
-            for (int d = 0; d < 4; d++) {
-                int nx = now.x + dx[d];
-                int ny = now.y + dy[d];
+		while (!q.isEmpty()) {
+			Position now = q.poll();
+			int x = now.x;
+			int y = now.y;
+			int tempD = now.dist;
 
-                if (nx < 0 || ny < 0 || nx >= N || ny >= N || visited[nx][ny]) continue;
+			if (grid[x][y] > 0 && grid[x][y] < size) { // 먹을 수 있는 물고기 if (dist == tempD) { // 거리가 같으면 위치 확인 후 갱신
+				if (dist > tempD) {
+					// 거리가 작으면 무조건 갱신
+					dist = tempD;
+					fx = x;
+					fy = y;
+				} else if (dist == tempD) {
+					if (fx > x || (fx == x) && (fy > y)) {
+						// 더위에 있거나 같은 높이인데 더 왼쪽에 있는 경우 갱신
+						dist = tempD;
+						fx = x;
+						fy = y;
+					}
+				}
+			}
 
-                if (grid[nx][ny] <= baby.size) {
-                    visited[nx][ny] = true;
-                    queue.offer(new Position(nx, ny, now.time + 1));
+			for (int d = 0; d < 4; d++) {
+				int nx = x + dx[d];
+				int ny = y + dy[d];
+				// 범위를 벗어나거나 방문 햇거나 물고기 사이즈가 상어보다 더 크면 패스
+				if (nx < 0 || nx >= N || ny < 0 || ny >= N || visited[nx][ny] || grid[nx][ny] > size)
+					continue;
+				visited[nx][ny] = true;
+				q.offer(new Position(nx, ny, tempD + 1));
+			}
 
-                    // 먹을 수 있는 물고기
-                    if (grid[nx][ny] > 0 && grid[nx][ny] < baby.size) {
-                        if (now.time + 1 <= minTime) {
-                            minTime = now.time + 1;
-                            eatableFishes.add(new Position(nx, ny, now.time + 1));
-                        }
-                    }
-                }
-            }
-        }
+		}
 
-        Collections.sort(eatableFishes, (a, b) -> {
-            if (a.time == b.time) {
-                if (a.x == b.x) return Integer.compare(a.y, b.y);  // 가장 위쪽
-                return Integer.compare(a.x, b.x);  // 가장 왼쪽
-            }
-            return Integer.compare(a.time, b.time);  // 가장 가까운 물고기
-        });
+		return new int[] { fx, fy, dist };
 
-        return eatableFishes;
-    }
+	}
+
 }

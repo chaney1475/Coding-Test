@@ -23,30 +23,29 @@ public class Main {
         
         if (A == 1){
             sb.append(Math.max(A,B)).append(" ");
-            
             for (int i = 0; i < N - (A+B-1); i++){
-            sb.append("1 ");
+                sb.append("1 ");
             }
             for (int i = B-1; i >= 1; i--){
-            sb.append(i).append(" ");
+                sb.append(i).append(" ");
             }
         }else{
             for (int i = 0; i < N - (A+B-1); i++){
-            sb.append("1 ");
-            
-        }
-        for (int i = 1; i <= A-1; i++){
-            sb.append(i).append(" ");
-        }
+                sb.append("1 ");
+            }
+            for (int i = 1; i <= A-1; i++){
+                sb.append(i).append(" ");
+            }
         
-        sb.append(Math.max(A,B)).append(" ");
-                for (int i = B-1; i >= 1; i--){
-            sb.append(i).append(" ");
-        }
+            sb.append(Math.max(A,B)).append(" ");
+            for (int i = B-1; i >= 1; i--){
+                sb.append(i).append(" ");
+            }
         
         }
         
         sb.deleteCharAt(sb.length()-1);
+        
         
         System.out.println(sb);
   }

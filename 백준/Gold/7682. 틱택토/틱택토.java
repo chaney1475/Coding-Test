@@ -51,7 +51,7 @@ public class Main {
         if (oline > 0 && xcnt != ocnt) return false;
 
         if (xline == 0 && oline == 0) {
-            if (xcnt + ocnt == 9) return true;
+            if (xcnt == 5 && ocnt == 4) return true;
             return false;
         }
 

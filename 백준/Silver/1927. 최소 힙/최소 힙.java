@@ -10,19 +10,21 @@ public class Main {
         
         int N = Integer.parseInt(br.readLine());
         PriorityQueue<Integer> pq = new PriorityQueue<>();
+        StringBuilder sb = new StringBuilder();
         
         for (int t = 0; t < N; t++){
             int x =  Integer.parseInt(br.readLine());
             if (x == 0){
                 if (pq.isEmpty()){
-                    System.out.println(0);
+                    sb.append("0\n");
                 }else{
-                    System.out.println(pq.poll());
+                    sb.append(pq.poll()).append("\n");
                 }
             }else{
                 pq.add(x);
             }
         }
+        System.out.print(sb);
         
         
     }

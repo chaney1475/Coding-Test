@@ -36,6 +36,7 @@ class Main {
 		
 //		System.out.println(Arrays.toString(memory));
 //		System.out.println(Arrays.toString(cost));
+		
 		int[] dp = new int[total + 1];
 		
 		Arrays.fill(dp, Integer.MAX_VALUE);
@@ -43,19 +44,18 @@ class Main {
 		
 		for (int i = 0; i < N; i++) {
 			for (int j = total; j >= memory[i]; j--) {
-//				System.out.println("j " + j + " j - memory[i] " + (j - memory[i]));
 				if (dp[j - memory[i]] != Integer.MAX_VALUE) {
-					dp[j] = Math.min(dp[j - memory[i]] + cost[i] , dp[j]);
+				    dp[j] = Math.min(dp[j], dp[j - memory[i]] + cost[i]);
 				}
-				
 			}
 		}
 		
-		int ans = Integer.MAX_VALUE;
-		
-		for (int i = M; i <= total; i++) {
-			ans = Math.min(ans, dp[i]);
-		}
+		 int ans = Integer.MAX_VALUE;
+	        for (int i = M; i <= total; i++) {
+	            if (dp[i] != Integer.MAX_VALUE) {
+	                ans = Math.min(ans, dp[i]);
+	            }
+	        }
 		
 		System.out.println(ans);
 	}

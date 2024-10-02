@@ -36,22 +36,27 @@ public class Solution {
 					ans[cnt++] = num;
 				}
 				
-				
 				else {
 					// 이분 탐색으로 삽입 위치 찾기
 					int s = 0;
 					int e = cnt - 1;
-
-					while (s < e) { // 둘이 같아질때 종료
+					int answer = 0;
+					
+					while (s <= e) { // 둘이 같아질때 종료
 						int m = (s + e) / 2;
-						if (ans[m]>= num) {
-							//같은 값중에 오른쪽으로 가도록
+						if (ans[m] == num) {
+							answer = m;
+							break;
+						}
+						else if (ans[m] > num) {
 							s = m + 1;
 						} else {
-							e = m;
+							e = m - 1;
+							answer = m;
 						}
+						
 					}
-					ans[s] = num; // 적절한 위치에 값 갱신
+					ans[answer] = num; // 적절한 위치에 값 갱신
 				}
 
 			}

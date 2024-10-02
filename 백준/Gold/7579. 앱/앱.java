@@ -1,59 +1,36 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
-class Main {
-	// 앱
-
-	// 실행중인 앱 활성화
-
-	public static void main(String[] args) throws Exception {
+public class Main {
+	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		int N = Integer.parseInt(st.nextToken()); 
+		int M = Integer.parseInt(st.nextToken()); 
+		
+		int[] dp = new int[10001];
+		
 		st = new StringTokenizer(br.readLine());
-
-		int N = Integer.parseInt(st.nextToken()); // 갯수
-		int M = Integer.parseInt(st.nextToken()); // 바이트 수
-
-		// M 바이트 확보하는데 가장 적게 드는 비용
-		//
-
-		int[] memory = new int[N]; // 바이트
-		int[] cost = new int[N]; // 끄는데 쓰이는 비용
-
-		int total = 0;
-
-		st = new StringTokenizer(br.readLine());
-		for (int i = 0; i < N; i++) {
-			memory[i] = Integer.parseInt(st.nextToken());
-
-		}
-
-		st = new StringTokenizer(br.readLine());
-		for (int i = 0; i < N; i++) {
-			cost[i] = Integer.parseInt(st.nextToken());
-			total += cost[i];
-		}
-
-//		System.out.println(Arrays.toString(memory));
-//		System.out.println(Arrays.toString(cost));
-
-		int[] dp = new int[total + 1];
-
-		for (int i = 0; i < N; i++) {
-			for (int j = total; j >= cost[i]; j--) {
-				dp[j] = Math.max(dp[j], dp[j - cost[i]] + memory[i]);
+		StringTokenizer st2 = new StringTokenizer(br.readLine());
+		
+		for(int i = 1; i <= N; i++) {
+			int m = Integer.parseInt(st.nextToken());
+			int c = Integer.parseInt(st2.nextToken());
+			
+			for(int j = 10000; j >= 0; j--) {
+				if(c <= j) dp[j] = Math.max(dp[j], dp[j-c]+m);
 			}
 		}
-
-		int ans = 0;
-		for (int i = 0; i <= total; i++) {
-			if (dp[i] >= M) {
-				ans = i;
-				break;
-			}
+		
+		int cost = 0;
+		for(; cost <= 10000; cost++) {
+			if(dp[cost] >= M) break;
 		}
-
-		System.out.println(ans);
+		
+		
+		System.out.println(cost);
 	}
 }

@@ -89,7 +89,9 @@ public class Solution {
 	}
 
 	static int checkByTime(int limit, Queue<Cell> q) {
-		
+
+		int cnt = 0;
+
 		//맨 앞에 잇는 것의 시간이 최대 시간보다 작은 경우
 		while (q.peek().activeS < limit) {
 			
@@ -113,22 +115,17 @@ public class Solution {
 					Cell newCell = new Cell(nx, ny, time, first.activeS, nextActiveS, nextDeadS);
 					if (map[nx][ny] == null) {
 						map[nx][ny] = newCell;
+						if(nextDeadS > limit) {
+							cnt++;
+						}
 						q.add(newCell);
 					}
 				}
 			}
 		}
-		int cnt = 0;
-
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < M; j++) {
-				if (map[i][j] != null) {
-					if (map[i][j].deadS > limit) {
-						cnt++;
-					}
-				}
-			}
-		}
+		
 		return cnt;
+
 	}
+
 }

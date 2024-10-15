@@ -1,52 +1,27 @@
-import java.util.*;
-import java.io.*;
-
+import java.util.Scanner;
+import java.util.Stack;
 
 public class Main {
-    public static void main(String args[]) throws Exception{
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String input = sc.nextLine();
         
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        
-        //pollLast로 빼기
-        
-        String s = br.readLine();
-        int N = s.length();
-        
-        
-        int[] cnt = new int[N];
-        
-        ArrayList<Integer> ls = new ArrayList<>();
-        
-        for (int i = 0; i < s.length(); i++){
-        	
-            char now = s.charAt(i);
-            if (i + 1 < s.length() && now == '(' && s.charAt(i + 1) == ')'){
-            	plus(ls, cnt);
-            	i++;
-            }else if(!ls.isEmpty() && s.charAt(ls.get(ls.size()-1)) == '(' && now == ')'){
-                ls.remove(ls.size()-1);
-            }else{
-                ls.add(i);
+        Stack<Character> stack = new Stack<>();
+        int totalPieces = 0;
+
+        for (int i = 0; i < input.length(); i++) {
+            if (input.charAt(i) == '(') {
+                stack.push('(');
+            } else {
+                stack.pop();
+                if (input.charAt(i - 1) == '(') {
+                    totalPieces += stack.size();
+                } else {
+                    totalPieces++;
+                }
             }
         }
-        
-        int ans = 0;
-        
-        for (int i = 0; i < N; i++){
-        	if (cnt[i] != 0) {
-        		ans += (cnt[i] + 1);
-        	}
-        }
-        
-        System.out.println(ans);
-        
+
+        System.out.println(totalPieces);
     }
-    
-    static void plus(ArrayList<Integer> ls, int[] cnt){
-    	for (Integer i : ls) {
-    		cnt[i]++;
-    	}
-    	
-    }
-  
 }

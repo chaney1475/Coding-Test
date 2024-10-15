@@ -1,12 +1,13 @@
 import java.util.Scanner;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String input = sc.nextLine();
         
-        Stack<Character> stack = new Stack<>();
+        Deque<Character> stack = new ArrayDeque<>();
         int totalPieces = 0;
 
         for (int i = 0; i < input.length(); i++) {
@@ -14,6 +15,7 @@ public class Main {
                 stack.push('(');
             } else {
                 stack.pop();
+                
                 if (input.charAt(i - 1) == '(') {
                     totalPieces += stack.size();
                 } else {

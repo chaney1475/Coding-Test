@@ -7,19 +7,16 @@ class Solution {
         int sum = 0; // k 개를 모아야함!
         int N = tangerine.length;
         
-        Map<Long, Long> map = new HashMap<>();
+        Map<Integer, Integer> map = new HashMap<>();
         
         for (int i = 0; i < N; i++){
-            map.putIfAbsent((long) tangerine[i], 0L);
-            map.put((long) tangerine[i], map.get((long)tangerine[i]) + 1L);
+            map.put(tangerine[i], map.getOrDefault(tangerine[i], 0) + 1);
         }
         
-        // System.out.println(map);
+        List<Map.Entry<Integer, Integer>> set = new ArrayList<>(map.entrySet());
+        set.sort((a, b) -> Integer.compare(b.getValue(), a.getValue()));
         
-        List<Map.Entry<Long, Long>> set = new ArrayList<>(map.entrySet());
-        set.sort((a, b) -> Long.compare(b.getValue(), a.getValue()));
-        
-        for (Map.Entry<Long, Long> e : set){
+        for (Map.Entry<Integer, Integer> e : set){
             sum += e.getValue();
             answer ++;
             if(sum >= k) break;

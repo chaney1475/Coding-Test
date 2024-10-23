@@ -1,13 +1,3 @@
-/*
-한 구간 구하기 a  * (a + 1) / 2
-시작점이 끝점보다 크면 -> -1
-start end 구해야함!
-
-둘중에 더 낮은 높이 +
-둘의 차이 / 2
-
-
-*/
 import java.util.*;
 
 class Solution {
@@ -21,8 +11,6 @@ class Solution {
         point = new ArrayList<>();
         
         makePoint((double)k);
-        
-        // System.out.println(point);
         
         int S = 0;
         int E = point.size()-1;
@@ -53,7 +41,6 @@ class Solution {
             double t1 = point.get(i);
             double t2 = point.get(i + 1);
             sum += Math.min(t1, t2) + Math.abs(t1 - t2) / 2;
-            // System.out.println(Math.min(t1, t2) + Math.abs((int)t1, (int)t2) / 2);
         }
         
         return sum;

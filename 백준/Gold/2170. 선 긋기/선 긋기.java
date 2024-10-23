@@ -15,23 +15,24 @@ public class Main
 	    StringTokenizer st;
 	    
 	    int N = Integer.parseInt(br.readLine()); // 선은 그은 횟수
-	    Point[] lines = new Point[N];
+	    ArrayList<Point> lines = new ArrayList<Point>();
+	    
 	    for (int i = 0; i < N; i++){
 	        st = new StringTokenizer(br.readLine());
 	        int a = Integer.parseInt(st.nextToken());
 	        int b = Integer.parseInt(st.nextToken());
-	        lines[i] = new Point(a,b);
+	        lines.add(new Point(a,b));
 	    }
 	    
-	    Arrays.sort(lines, (a,b) -> Integer.compare(a.start, b.start));
+	    Collections.sort(lines, (a,b) -> a.start - b.start);
 	    
-	    int S = lines[0].start;
-	    int E = lines[0].end;
+	    int S = lines.get(0).start;
+	    int E = lines.get(0).end;
 	    
 	    int sum = 0; 
 	    
 	    for (int i = 1; i < N; i++){
-	        Point now = lines[i];
+	        Point now = lines.get(i);
 	        int start = now.start;
 	        int end = now.end;
 	        

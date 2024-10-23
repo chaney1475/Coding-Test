@@ -1,35 +1,38 @@
+/*
+먼저 시작하는 순서 대로, 늦게끝나는 순서대로 넣어야하기 때문에
+*/
 import java.util.*;
-
 class Solution {
     public int solution(int[][] targets) {
-        int answer = 0;
+        int ans = 0;
+        
         int N = targets.length;
         
         Arrays.sort(targets, (a,b) -> {
-           if (a[0] != b[0]){
-               return a[0] - b[0];
-           } else{
-               return a[1] - b[1];
-           }
+            if (a[0] != b[0])
+               return Integer.compare(a[0], b[0]);
+            else
+                return Integer.compare(b[1], a[1]);
         });
         
-        //앞에서부터 읽어서 뒤에 있는 값이 존재하지 않거나 시작 값이 끝값보다 크면 +1
-        int start = targets[0][0];
-        int end = targets[0][1];
-        answer++;
+        int nS = -1;
+        int nE = -1;
+        
         for (int i = 0; i < N; i++){
-            if (i + 1 < N) {
-               if( end <= targets[i+1][0]){
-                answer++;
-                start = targets[i+1][0];
-                end = targets[i+1][1];
-                }else{
-                    end = Math.min(end,targets[i+1][1]);
-                }
-            }
+            int[] now = targets[i];
+            int start = now[0];
+            int end = now[1];
             
+            if (start >= nE){
+                ans++;
+                nS = start;
+                nE = end;
+            }else {
+                nS = Math.max(start, nS);
+                nE = Math.min(end, nE);
+            }
         }
         
-        return answer;
+        return ans;
     }
 }

@@ -23,10 +23,7 @@ public class Main
 	        lines[i] = new Point(a,b);
 	    }
 	    
-	    Arrays.sort(lines, (a,b) -> {
-	        if(a.start != b.start) return Integer.compare(a.start, b.start);
-	        else return Integer.compare(b.end, b.end);
-	    });
+	    Arrays.sort(lines, (a,b) -> Integer.compare(a.start, b.start));
 	    
 	    int S = lines[0].start;
 	    int E = lines[0].end;
@@ -39,7 +36,7 @@ public class Main
 	        int end = now.end;
 	        
 	        if(start <= E){
-	            E = Math.max(end, E);
+	        	E = Math.max(end, E);
 	        }else {
 	        	sum += E - S;
 	            S = start;

@@ -17,7 +17,7 @@ public class Main {
         	dist[i] = Integer.parseInt(st.nextToken());
         }
         
-        int ans = 0;
+        long ans = 0;
         int k = 0;
         
         st = new StringTokenizer(br.readLine());
@@ -32,7 +32,7 @@ public class Main {
         		k = Math.min(k,now);
         	}
         	
-        	ans += k * dist[i];
+        	ans += (long)k * (long)dist[i];
         }
         
         System.out.println(ans);

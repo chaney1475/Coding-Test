@@ -1,46 +1,48 @@
 import java.util.*;
 
-class Solution {
-    public int[] solution(int[] progresses, int[] speeds) {
+// 큰거 만나면 무조건 이전꺼 정리
+// 작은거 만나면 넘어가기
 
-        int N = progresses.length;
+class Solution {
+    public int[] solution(int[] progress, int[] speeds) {
         
-        ArrayDeque<Integer> dq = new ArrayDeque<>();
+        int N = progress.length;
+        
+        int[] days = new int[N];
         
         for (int i = 0; i < N; i++){
-            int days = (100 - progresses[i] + speeds[i] - 1) / speeds[i];
-            dq.add(days);
+            days[i] = ((100 - progress[i]) + speeds[i] - 1) / speeds[i];
         }
-        
-        // System.out.println(dq);
         
         List<Integer> ans = new ArrayList<>();
         
+        int max = days[0];
         int cnt = 1;
-        int day = dq.poll();
         
-        while(!dq.isEmpty()){
-            //나올 다음의 값
-            int next = dq.peek();
-            // 확인해보니 다음날보다 숫자가 크다! 아니면 이게 마지막 숫자임
-            if (next > day){
+        for (int i = 1; i < N; i++){
+            
+            if (max < days[i]){
                 ans.add(cnt);
-                day = next;
+                max = days[i];
                 cnt = 1;
-            }else{
+            } else{
                 cnt++;
             }
-            dq.poll();
+            
+            if (i == N - 1){
+                ans.add(cnt);
+                break;
+            }
         }
-        ans.add(cnt);
         
-        // System.out.println(cnt);
-    
+        // System.out.println(Arrays.toString(days));
+        
         int[] answer = new int[ans.size()];
-        int k = 0;
-        for (Integer i : ans){
-            answer[k++] = i;
+        
+        for (int i = 0; i < ans.size(); i++){
+            answer[i] = ans.get(i);
         }
+        
         return answer;
     }
 }

@@ -1,83 +1,89 @@
 import java.util.*;
 
 class Solution {
-    static class Study{
-        String name;
-        int leftD;
-        Study(String name, int leftD){
-            this.name = name;
-            this.leftD = leftD;
+    class Study{
+        int start, end, duration; String name;
+        Study(String name, int start, int duration){
+            this.start = start;
+            this.name = name; this.duration = duration;
+        }
+        public String toString(){
+            return "s: " + start + ", d: " + duration + " n: "+ name;
         }
     }
     public String[] solution(String[][] plans) {
         int N = plans.length;
         
+        Study[] q = new Study[N];
+        int qi = 0;
+        // 시작시간이 빠른 순으로
+        LinkedList<Study> left = new LinkedList<>();
+        
+        for (String[] p : plans){
+            String name = p[0];
+            int start = make(p[1]);
+            int duration = Integer.valueOf(p[2]);
+            q[qi++] = new Study(name, start, duration);
+        }
+        
         String[] answer = new String[N];
-        List<String> list = new ArrayList<>();
+        int idx = 0;
         
-        Arrays.sort(plans, (a,b) -> {
-           int aTime = makeInt(a[1]);
-            int bTime = makeInt(b[1]);
-            return(aTime-bTime);
-        });
-        
-        Deque<Study> dq = new ArrayDeque<>();
+        Arrays.sort(q, (a,b) -> a.start - b.start);
         
         for (int i = 0; i < N ; i++){
-            String[] now = plans[i];
             
-            String name = now[0];
-            int start = makeInt(now[1]);
-            int duration = Integer.parseInt(now[2]);
+            int start = q[i].start;
+            int duration = q[i].duration;
+            String name = q[i].name;
+            Study now = q[i];
             
-            // System.out.println(name + " " + start + " " + duration);
-            //다음걸 보아야함
-            if( i == N - 1 ){
-                list.add(name);
+            if (i == N - 1){
+                answer[idx++] = name;
                 break;
             }
-            String[] next = plans[i + 1];
-            int nextStart = makeInt(next[1]);
-            // System.out.println("next : " + nextStart);
-            //내가 끝나는 시간이랑 nextStart 비교
+            
+            int nextStart = q[i + 1].start;
             
             if (nextStart == start + duration){
-                //시간이 딱맞는 경우
-                list.add(name);//정답에 현재 이름 넣기
+                answer[idx++] = name;
             }else if (nextStart > start + duration){
-                //현재꺼를 진행 시키고 나서도 시간이 남음
-                list.add(name);
-                int left = nextStart - (start + duration);
+                answer[idx++] = name;
+                int leftTime = nextStart - (start + duration);
                 
-                while(!dq.isEmpty() && left > 0){
-                    int nextLeft = dq.peekLast().leftD;
-                    //nextLeft가 처리 가능한지 판별
-                    if(nextLeft <= left){
-                        left -= nextLeft;
-                        Study tmp = dq.pollLast();
-                        list.add(tmp.name);
+                while (!left.isEmpty() && leftTime > 0){
+                    int nextTime= left.peekLast().duration;
+                    
+                    if (nextTime <= leftTime){
+                        leftTime -= nextTime;
+                        answer[idx++] = left.pollLast().name;
                     }else{
-                        dq.peekLast().leftD -= left;
-                        left = 0;
+                        left.peekLast().duration -= leftTime;
+                        leftTime = 0;
                     }
                 }
                 
             }else{
-                //진행하다가 중단해야하는 경우
-                int leftD = duration - (nextStart - start);
-                dq.addLast(new Study(name, leftD));
+                now.duration -= nextStart - start;
+                left.addLast(now);
             }
             
         }
-        while(!dq.isEmpty()){
-            list.add(dq.pollLast().name);
+        
+        while (!left.isEmpty()){
+            Study now = left.pollLast();
+            answer[idx++] = now.name;
         }
         
-        return list.toArray(new String[0]);
+        return answer;
     }
-                
-    static int makeInt(String time){
-        String[] s = time.split(":");
-        return Integer.parseInt(s[0]) * 60 + Integer.parseInt(s[1]);
+    
+    int make(String time){
+        String[] tmp = time.split(":");
+        int h = Integer.valueOf(tmp[0]);
+        int m = Integer.valueOf(tmp[1]);
+        return h * 60 + m;
     }
+    
+    
 }

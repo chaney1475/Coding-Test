@@ -1,43 +1,60 @@
 import java.util.*;
 
-class Solution {
-    static class Car{
-        int w;
-        int end;
-        Car(int w, int end){
-            this.w = w;
-            this.end = end;
-        }
-    }
-    public int solution(int bridge, int limit, int[] weights) {
-        int answer = 0;
+/*
+올라갈 수 잇는 수 : length
+견딜 수 잇는 무게 : weight
 
-        int idx = 0; //봐야하는 트럭의 순서!
-        int N = weights.length;
+트럭 배열 [7,4,5,6]
+
+1초씩 체크 하기
+
+수랑 무게 체크 : 올릴 수 잇다?
+올리기
+
+못 올린다 하면
+맨 앞에잇는애가 언제나가는지 보기
+
+올릴때 나가는 수 적기
+1초에 올렷으면 언제 나갈 수 잇는지
+무게랑 나갈 초수 같이 쓰기
+1에 올라온 애면 3에 나감
+올라온 시간 + 길이
+
+*/
+
+class Solution {
+    public int solution(int length, int weight, int[] truck) {
         
-        Queue<Car> q = new LinkedList<>();
+        int time = 1;
+        
+        int N = truck.length;
         
         int sum = 0;
-        int now = 1;
+        Deque<int[]> dq = new ArrayDeque<>();
         
-        while(idx < N){
-            if (q.size() < bridge && sum + weights[idx] <= limit){
-                while(q.size() < bridge && idx < N && sum + weights[idx] <= limit){
-                    sum += weights[idx];
-                    q.add(new Car(weights[idx++], now + bridge));
-                    now++;
-                }
-                
-            }else{
-                Car car = q.poll();
-                sum -= car.w;
-                now = Math.max(now, car.end);
+        int tidx = 0;
+        
+        while(true){
+            int now = truck[tidx];
+            // [0] : 무게 , [1] : 나가는 시간
+            if (!dq.isEmpty() && dq.peekFirst()[1] == time){
+                sum -= dq.pollFirst()[0];
             }
+            
+            if (sum + now <= weight && dq.size() < length){
+                dq.add(new int[]{now, time + length});
+                sum += now;
+                tidx++;
+            }
+            
+            time++;
+            if (tidx == N) break;
         }
         
-        while(!q.isEmpty()){
-            now = q.poll().end;
+        if (!dq.isEmpty()){
+            time = dq.pollLast()[1];
         }
-        return now;
+        
+        return time;
     }
 }

@@ -1,49 +1,49 @@
 import java.util.*;
 
 class Solution {
-    static int[] rep;
+    
+    int[][] compu;
+    boolean visited[];
+    int n;
+    int ans;
     
     public int solution(int n, int[][] computers) {
-        int answer = 0;
-        rep = new int[n];
+        this.n = n;
+        visited = new boolean[n];
+        compu = computers;
+        
+        ans = 0;
         
         for (int i = 0; i < n; i++){
-            rep[i] = i;
-        }
-        
-        for (int i = 0; i < n; i++){
-            for (int j = 0; j < n; j++){
-                if (computers[i][j] == 1){
-                    friend(i,j);
-                }
+            if (!visited[i]) {
+                ans ++;
+                bfs(i);
             }
         }
         
-        Set<Integer> set = new HashSet<>();
-        
-        for (int i = 0; i < n; i++){
-            set.add(find(i));
-        }
-        
-        return set.size();
+        return ans;
     }
-    
-    static boolean friend(int a, int b){
-        a = find(a);
-        b = find(b);
+    void bfs(int x){
+        Queue<Integer> q = new LinkedList<>();
         
-        if (a == b) return false;
+        visited[x] = true;
+        q.add(x);
         
-        if(a < b) rep[b] = a;
-        else rep[a] = b;
+        System.out.println("시작 : " + x);
         
-        return true;
-    }
-    
-    static int find(int x){
-        if(x != rep[x]){
-            rep[x] = find(rep[x]);
+        while(!q.isEmpty()){
+            
+            int now = q.poll();
+            
+            for (int i = 0; i < n; i++){
+                if (compu[now][i] == 1 && !visited[i]){
+                    q.add(i);
+                    visited[i] = true;
+                }
+            }
+            
         }
-        return rep[x];
+        System.out.println(Arrays.toString(visited));
+        
     }
 }

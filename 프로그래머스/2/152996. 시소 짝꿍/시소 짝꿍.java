@@ -1,56 +1,61 @@
 import java.util.*;
+/*
+100 2명
+210 1명
+* 2 랑 같기
+*/
+import java.util.*;
 
 class Solution {
-    
-    Map<Integer, Integer> map;
-    
+    int[][] c = new int[3][2];
     public long solution(int[] weights) {
-        long answer = 0;
-        map = new HashMap<>();
+        
+        long ans = 0;
+        
+        
+        Map<Integer, Integer> map = new HashMap<>();
         
         int N = weights.length;
         
         for (int i = 0; i < N; i++){
-            map.putIfAbsent(weights[i], 0);
-            map.put(weights[i], map.get(weights[i]) + 1);
+            map.put(weights[i], map.getOrDefault(weights[i], 0) + 1);
         }
+        int n = map.size();
         
-        for (Map.Entry<Integer, Integer> entry : map.entrySet()){
-            //1개 이상인경우에는 
+        int[] list = new int[n];
+        int[] cnt = new int[n];
+        int idx = 0;
+        
+        for (Map.Entry<Integer, Integer> en: map.entrySet()){
+            list[idx] = en.getKey();
+            cnt[idx++] = en.getValue();
+        }
+        c[0] = new int[]{1,2};
+        c[1] = new int[]{2,3};
+        c[2] = new int[]{3,4};
+        
+        for (int i = 0; i < n; i++){
+            // 나 자신인 경우
+            ans += ((long)(cnt[i] - 1) * (long)(cnt[i])) / 2;
             
-            if (entry.getValue() > 1){
-                //나 자신과 하기
-                answer += (long)entry.getValue() * (long)( entry.getValue() - 1) / 2;
-            }
-            
-            List<Integer> list = makeList(map, entry.getKey());
-            
-            for (Integer pos : list){
-                //있는 경우에는 곱하기!
-                if (map.containsKey(pos)){
-                    answer += (long) map.get(pos) * (long) entry.getValue();
+            for (int j = i + 1; j < n; j++){
+                if (check(list[i], list[j])){
+                    ans += (long) cnt[i] * (long) cnt[j];
                 }
             }
         }
         
-        return answer;
+        return ans;
     }
-    
-    List<Integer> makeList(Map<Integer, Integer> map, Integer key){
-        //각각 확인하기
-        List<Integer> answer = new ArrayList<>();
-        
-        if (map.containsKey(key * 2)){
-            answer.add(key * 2);
+    boolean check(long x, long y){    
+        for (int i = 0; i < 3; i++){
+            int a = c[i][0];
+            int b = c[i][1];
+            
+            if (a * x == y * b || a * y == b * x){
+                return true;
+            }
         }
-        if (key % 2 == 0 && map.containsKey(key / 2 * 3)){
-            answer.add( key / 2 * 3);
-        }
-        if (key % 3 == 0 && map.containsKey(key / 3 * 4)) {
-            answer.add( key / 3 * 4);
-        }
-        
-        return answer;
+        return false;
     }
-    
 }

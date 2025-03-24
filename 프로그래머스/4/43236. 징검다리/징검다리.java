@@ -1,44 +1,57 @@
 import java.util.*;
-
 class Solution {
+    int distance;
+    int[] rocks;
+    int N, n;
     public int solution(int distance, int[] rocks, int n) {
-        int ans = 0;
-        int target = rocks.length - n + 1; // 만족해야하는 돌의 수
         
-        //최소 길이
-        int s = 0;
-        int e = distance + 1;
+        this.distance = distance;
+        this. rocks = rocks;
+        
+        N = rocks.length;
+        
+        int counts = N - n + 1;
         
         Arrays.sort(rocks);
         
+        long s = 1;
+        long e = distance;
+        
+        long ans = -1;
+        
         while (s <= e){
-            int m = (int) (((long) s + (long) e) / 2);
-            if (check(distance, rocks, m) >= target){
-                //많거나 같으면 일단 된거임 근데 많으니까 크기를 늘려야함!
-                ans = m;
-                s = m + 1;
+            long mid = (s + e) / 2;
+            
+            // 바위의 수를 보자
+            long cnt = check(mid);
+            
+            // 바위의 수가 그게 되는 순가
+            if (cnt >= counts){
+                ans = mid;
+                s = mid + 1;
             }else{
-                e = m - 1;
+                e = mid - 1;
             }
         }
         
-        return ans;
+        return (int) ans;
     }
     
-    int check(int distance, int[] rocks, int m){
-        //최소 길이가 m이 될때의 가능한 돌의 수
-        int cnt = 0;
-        int now = m;
-        //마지막 돌이랑 끝도 확인해야함
+    int check(long mid){
         
-        for (int i = 0; i < rocks.length; i++){
-            if (now <= rocks[i]){
-                //같거나 크면 세야함
-                now = rocks[i] + m;
+        int cnt = 0;
+        int prev = 0;
+        
+        int idx = 0;
+        
+        for (int i = 0; i < N; i++){            
+            if (rocks[i] >= mid + prev){
                 cnt++;
+                prev = rocks[i];
             }
         }
-        if (now <= distance){
+        
+        if (prev + mid <= distance){
             cnt++;
         }
         

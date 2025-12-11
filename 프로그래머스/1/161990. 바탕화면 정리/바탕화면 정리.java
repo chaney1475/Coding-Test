@@ -1,34 +1,32 @@
+import java.math.*;
 import java.util.*;
+
 
 class Solution {
     public int[] solution(String[] wallpaper) {
-       
-        int N = wallpaper.length;
-        int M = wallpaper[0].length();
         
-        char[][] map = new char[N][M];
+        int n = wallpaper.length;
+        int m = wallpaper[0].length();
         
-        int sx = N;
-        int sy = M;
+        int maxX = -1;
+        int maxY = -1;
         
-        int ex = 0;
-        int ey = 0;
+        int minX = n;
+        int minY = m;
         
-        
-        for (int i = 0; i < N; i++){
-            for (int j = 0; j < M; j++){
-                if (wallpaper[i].charAt(j) == '#'){
-                    sx = Math.min(sx, i);
-                    sy = Math.min(sy, j);
+        for (int i = 0; i < n; i++){
+            for (int j = 0; j < m; j++){
+                char cur = wallpaper[i].charAt(j);
+                if (cur == '#'){
+                    maxX = Math.max(maxX, i);
+                    maxY = Math.max(maxY, j);
                     
-                    ex = Math.max(ex, i);
-                    ey = Math.max(ey, j);
+                    minX = Math.min(minX, i);
+                    minY = Math.min(minY, j);
                 }
             }
-            
         }
+        return new int[] {minX, minY, maxX + 1, maxY +1};
         
-        int[] answer = new int[] {sx, sy, ex + 1, ey + 1};
-        return answer;
     }
 }

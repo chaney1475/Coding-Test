@@ -2,25 +2,23 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String s) {
+        int n = s.length();
+        int[] answer = new int[n];
         
-        int[] alp = new int[26];
+        Map<Character, Integer> idx = new HashMap<>();
         
-        Arrays.fill(alp, -1);
-        
-        int N = s.length();
-        int[] answer = new int[N];
-        
-        for (int i = 0; i < N; i++){
-            int now = s.charAt(i) - 'a';
-            if(alp[now] == -1){
+        for (int i = 0; i < n; i++){
+            char cur = s.charAt(i);
+            int foundIndex = idx.getOrDefault(cur, -1);
+            if (foundIndex == -1){
                 answer[i] = -1;
             }else{
-                answer[i] = i - alp[now];
+                answer[i] = i - foundIndex;
             }
-            alp[now] = i;
+            
+            idx.put(cur, i);
         }
-        
-        
+            
         return answer;
     }
 }

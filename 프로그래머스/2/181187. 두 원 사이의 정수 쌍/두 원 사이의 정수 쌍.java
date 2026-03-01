@@ -2,32 +2,25 @@ import java.util.*;
 
 class Solution {
     public long solution(int r1, int r2) {
+
         long answer = 0;
-        
-        // 한분면만 구한다음에 * 4
-        // 실수인거 * 4
-        long in = 0;
-        long R1 = (long) r1;
-        long R2 = (long) r2;
-        
-        for (long i = 1; i <= R2; i++){
-            double tmp = Math.sqrt((R1 * R1) - (i * i));
-            
-            long end = (long) Math.sqrt((R2 * R2) - (i * i));
-            
-            long start = 0L;
-            if (i < r1){
-                if (tmp == (long) tmp){
-                    start = (long)tmp;
-                
-                }else{
-                    start = (long)tmp + 1;
-                }
+
+        long r2Sq = (long) r2 * r2;
+        long r1Sq = (long) r1 * r1;
+
+        for (long x = 1; x <= r2; x++) {
+
+            long maxY = (long) Math.sqrt(r2Sq - x * x);
+
+            long minY = 0;
+
+            if (r1Sq - x * x > 0) {
+                minY = (long) Math.ceil(Math.sqrt(r1Sq - x * x));
             }
-            
-            in += (end - start + 1);
-            
+
+            answer += (maxY - minY + 1);
         }
-        return in * 4;
+
+        return answer * 4;
     }
 }

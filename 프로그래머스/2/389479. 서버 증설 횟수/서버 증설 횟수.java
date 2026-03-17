@@ -2,29 +2,29 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] players, int m, int k) {
-        int n = players.length;
-        int ans = 0;
-        int now = 0;
-        Queue<Integer> queue = new LinkedList<>();
         
-        for (int i = 0; i < n; i++) {
-            // 1. 현재 시간에서 만료된 서버 제거 및 now 감소
-            while (!queue.isEmpty() && queue.peek() == i) {
-                queue.poll();
-                now--;
+        int answer = 0;
+        
+        int total_sec = players.length;
+        
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        
+        for (int i = 0; i < total_sec; i++) {
+            int playerCnt = players[i];
+            int server = playerCnt / m;
+            
+            while (!pq.isEmpty() && pq.peek() <= i) {
+                pq.poll();
             }
             
-            // 2. 필요한 서버 수 계산 (올림 처리)
-            int required = (players[i]) / m;
-            
-            // 3. 필요한 서버 수가 현재 서버 수보다 많으면 추가 증설
-            while (now < required) {
-                queue.add(i + k); // k시간 동안 운영
-                now++;
-                ans++;
+            // 추가해야하는 서버 수
+            int newServer = server - pq.size();
+            for (int j = 0; j < newServer; j++) {
+                answer++;
+                pq.add(i + k);
             }
+            
         }
-        
-        return ans;
+        return answer;
     }
 }

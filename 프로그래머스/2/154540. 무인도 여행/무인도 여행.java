@@ -1,88 +1,72 @@
-
-
 import java.util.*;
 
 class Solution {
-    static int[] dx = new int[] {0,0,-1,1};
-    static int[] dy = new int[] {-1,1,0,0};
-    
-    static int N;
-    static int M;
-    
-    static int[][] map;
-    static boolean[][] visited;
+    int[][] map;
+    int n;
+    int m;
+    int[] dx = new int[]{-1,1,0,0};
+    int[] dy = new int[]{0,0,-1,1};
     
     public int[] solution(String[] maps) {
         
-        N = maps.length;
-        M = maps[0].length();
+        ArrayList<Integer> ans = new ArrayList<>();
         
-        map = new int[N][M];
-        visited = new boolean[N][M];
+        n = maps.length;
+        m = maps[0].length();
         
-        for (int i = 0; i < N; i++){
-            for (int j = 0; j < M; j++){
-                char tmp = maps[i].charAt(j);
-                if (tmp != 'X'){
-                    map[i][j] = tmp - '0';
+        map = new int[n][m];
+        
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                Character now = maps[i].charAt(j);
+                if (now == 'X') {
+                    map[i][j] = -1;
+                } else {
+                    map[i][j] = now - '0';
                 }
             }
         }
         
-        
-        List<Integer> lands = new ArrayList<>();
-        
-        for (int i = 0; i < N; i++){
-            for (int j = 0; j < M; j++){
-                if (visited[i][j] || map[i][j] == 0) continue;
-                lands.add(bfs(i,j));
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (map[i][j] != -1) {
+                    int tmpSum = bfs(i,j);
+                    System.out.println(tmpSum);
+                    ans.add(tmpSum);
+                }
             }
         }
-        
-        if (lands.size()  == 0){
-            return new int[] {-1};
+        if (ans.isEmpty() ){
+            return new int[]{-1};
         }
         
-        Collections.sort(lands);
-        
-        int[] answer = new int[lands.size()];
-        int idx = 0;
-        
-        for (Integer i : lands){
-            answer[idx++] = i;
-        }
-        
-        return answer;
-        
+        return ans.stream().sorted().mapToInt(i -> i).toArray();
     }
-    
-    static int bfs(int a, int b){
-        Queue <int[]> q = new LinkedList<>();
-        q.add(new int[] {a,b});
-        visited[a][b] = true;
-        int sum = map[a][b];
+    public int bfs(int x, int y) {
+        Deque<int[]> queue = new ArrayDeque<>();
         
-        while(!q.isEmpty()){
-            int[] now = q.poll();
-            int x = now[0];
-            int y = now[1];
+        int sum = map[x][y];
+        map[x][y] = -1;
+        queue.add(new int[]{x,y});
+        
+        while(!queue.isEmpty()) {
+            int[] now = queue.poll();
             
-            for (int d = 0; d < 4; d++){
-                int nx = dx[d] + x;
-                int ny = dy[d] + y;
+            for (int i = 0; i < 4; i++) {
+                int nx = now[0] + dx[i];
+                int ny = now[1] + dy[i];
                 
-                if (nx < 0 || nx >= N || ny < 0 || ny >= M 
-                    || visited[nx][ny] || map[nx][ny] == 0) continue;
-                
+                if (nx < 0 || nx >= n || ny < 0 || ny >= m 
+                    || map[nx][ny] == -1) {
+                    continue;
+                }
                 sum += map[nx][ny];
-                visited[nx][ny] = true;
-                q.add(new int[] {nx, ny});
+                map[nx][ny] = -1;
+                queue.add(new int[]{nx, ny});
             }
             
         }
-        
         return sum;
-        
     }
     
 }

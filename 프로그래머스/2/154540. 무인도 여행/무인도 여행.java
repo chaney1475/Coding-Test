@@ -31,7 +31,6 @@ class Solution {
             for (int j = 0; j < m; j++) {
                 if (map[i][j] != -1) {
                     int tmpSum = bfs(i,j);
-                    System.out.println(tmpSum);
                     ans.add(tmpSum);
                 }
             }

@@ -1,29 +1,25 @@
+// 5 3 3 2 //
+// 3 5 5 -1
 import java.util.*;
-
 class Solution {
-    //나보다 뒤에있는 수 중에서 나보다 크면서 가장 가까이에 잇는 수
-    //arrayDeque
-    
-    public int[] solution(int[] nums) {
-        int N = nums.length;
-        int[] answer = new int[N];
+    public int[] solution(int[] numbers) {
+        int n = numbers.length;
+        Deque<Integer> dq = new ArrayDeque<>();
         
+        int[] answer = new int[n];
         Arrays.fill(answer, -1);
         
-        Deque<Integer> deque = new ArrayDeque<>();
-        
-        for (int i = N -1; i >= 0; i--){
-            int now = nums[i];
+        for (int i = n -1; i >= 0; i--) {
+            int cur = numbers[i]; // 현재 숫자
             
-            while(!deque.isEmpty() && deque.peekLast() <= now){
-                deque.pollLast();
+            while(!dq.isEmpty() && dq.peekLast() <= cur) {
+                dq.pollLast();
             }
             
-            if (!deque.isEmpty() && deque.peekLast() > now){
-                answer[i] = deque.peekLast();
+            if(!dq.isEmpty() && dq.peekLast() > cur) {
+                answer[i] = dq.peekLast();
             }
-            
-            deque.addLast(now);
+            dq.add(cur);
         }
         
         return answer;

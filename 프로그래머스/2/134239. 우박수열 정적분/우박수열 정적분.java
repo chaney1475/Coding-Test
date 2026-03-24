@@ -1,64 +1,52 @@
 import java.util.*;
 
 class Solution {
-    static List<Double> point;
-    
     public double[] solution(int k, int[][] ranges) {
+        List<Integer> nums = new ArrayList<>();
         
-        int N = ranges.length;
+        double[] answer = new double[ranges.length];
         
-        double[] ans = new double[N];
-        point = new ArrayList<>();
-        
-        makePoint((double)k);
-        
-        int S = 0;
-        int E = point.size()-1;
-        
-        for (int i = 0; i < N; i++){
-            int[] now = ranges[i];
-            
-            int start = now[0];
-            int end = E + now[1];
-            
-            if (start > end) {
-                ans[i] = -1.0;
-            }else if (start < end){
-                ans[i] = cal(start, end);
-            }
-            
-        }
-        
-        
-        return ans;
-    }
-    
-    static double cal(int start, int end){
-        
-        double sum = 0.0;
-        
-        for (int i = (int)start; i < end; i++){
-            double t1 = point.get(i);
-            double t2 = point.get(i + 1);
-            sum += Math.min(t1, t2) + Math.abs(t1 - t2) / 2;
-        }
-        
-        return sum;
-        
-    }
-    
-    static void makePoint(double k){
-        
-        point.add(k);
-        
-        while(k != 1){
-            if (k % 2 == 0){
+        while (k > 1) {
+            nums.add(k);
+            if (k % 2 == 0) {
                 k = k / 2;
-            }else{
+            } else {
                 k = k * 3 + 1;
             }
-            point.add(k);
+        }
+        nums.add(1);
+        
+        int n = nums.size() - 1;
+        
+        double[] rslts = new double[n];
+        
+        for (int i = 0; i < n; i++) {
+            double h = nums.get(i) + nums.get(i+1);
+            double rslt = h / 2;
+            rslts[i] = rslt;
         }
         
+        for (int i = 0; i < ranges.length; i++) {
+            
+            int a = ranges[i][0];
+            int b = ranges[i][1];
+            
+            int s = a;
+            int e = n + b;
+            
+            if (s > e) {
+                answer[i] = -1;
+                continue;
+            }
+            
+            double sum = 0;
+            
+            for (int j = s; j < e; j++){
+                sum += rslts[j];
+            }
+            answer[i] = sum;
+        }
+        
+        return answer;
     }
 }

@@ -1,33 +1,39 @@
+import java.util.*;
+
 class Solution {
     public int solution(String s) {
+        
         int answer = 0;
-        int n = s.length();
-        int xCnt = 0;
-        int yCnt = 0;
         
-        char first = s.charAt(0);
+        int len = s.length();
         
-        for (int i = 0; i < n; i++){
-            char cur = s.charAt(i);
-            if (
-                xCnt == 0 &&
-                yCnt == 0){
-                first = cur;
+        int first = -1;
+        
+        int same = 0;
+        int diff = 0;
+        
+        for (int i = 0; i < len; i++) {
+            int now = s.charAt(i) - 'a';
+            
+            if (same == 0 && diff == 0) {
+                first = now;
             }
-            if (cur == first){
-                xCnt++;
-            }else{
-                yCnt++;
+            
+            if (now == first) {
+                same++;
+            } else {
+                diff++;
             }
-            if(xCnt == yCnt){
+            
+            if (same == diff) {
                 answer++;
-                xCnt = 0;
-                yCnt = 0;
+                same = 0;
+                diff = 0;
             }
         }
         
-        if (xCnt > 0 || yCnt > 0){
-            answer++;
+        if (same + diff > 0) {
+            answer ++;
         }
         
         return answer;

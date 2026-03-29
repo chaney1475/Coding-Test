@@ -1,45 +1,45 @@
 import java.util.*;
-
+// 롤케이크를 반으로 크기보다 올려진 토킹의 종류가 중요 동일한 가짓수의 토핑인 경우 공평
 class Solution {
     public int solution(int[] topping) {
-        int N = topping.length;
-        int ans = 0;
         
-        Map<Integer, Integer> front = new HashMap<>();
-        Map<Integer, Integer> back = new HashMap<>();
-        int frontCount = 0;
-        int backCount = 0;
+        int answer = 0;
         
-        for (int i = 0; i < N; i++){
-            int cnt = back.getOrDefault(topping[i], 0);
-            if (cnt == 0){
-                backCount++;
+        int cnt1 = 0;
+        int cnt2 = 0;
+        
+        int n = topping.length;
+        
+        int[] t1 = new int[10001];
+        int[] t2 = new int[10001];
+            
+        for (int i = 0; i < n; i++) {
+            t2[topping[i]]++;
+            // 방금 추가되어 1이 된 경우 종류에 추가
+            if (t2[topping[i]] == 1) {
+                cnt2++;
             }
-            back.put(topping[i], cnt + 1);
         }
         
-        for (int i = 0; i < N; i++){
-            // i부터 뒤의 것!
-            // 0부터 i-1까지, i부터 N까지 
+        for (int i = 0; i < n; i++) {
+            //t1은 i까지
             int now = topping[i];
             
-            int fCnt = front.getOrDefault(now, 0);
-            if (fCnt == 0){
-                frontCount++;
-            }
-            front.put(now, fCnt + 1);
-            
-            int bCnt = back.getOrDefault(now, 0);
-            if (bCnt == 1){
-                backCount--;
-                back.remove(now);
-            }else{
-                back.put(now, bCnt - 1);
+            t1[now]++;
+            if (t1[now] == 1) {
+                cnt1++;
             }
             
-            if (frontCount == backCount) ans++;
+            t2[now]--;
+            if (t2[now] == 0) {
+                cnt2--;
+            }
+            
+            if (cnt1 == cnt2) {
+                answer++;
+            }
         }
         
-        return ans;
+        return answer;
     }
 }

@@ -1,63 +1,26 @@
 import java.util.*;
+
 class Solution {
     public int solution(int[] arrayA, int[] arrayB) {
-        int N = arrayA.length;
-        
-        int answer = 0;
-        
-        int a = arrayA[0];
-        
-        for (int i = 1; i < N; i++){
-            a = gcd(arrayA[i], a);
-            if (a == 1) break;
-        }
-        
-        int b = arrayB[0];
-        
-        for (int i = 1; i < N; i++){
-            b = gcd(arrayB[i],b);
-            if (b == 1) break;
-        }
-        
-        
-        if(!canDivide(arrayB, a)){
-            answer = Math.max(answer, a);
-        }
-        
-        if(!canDivide(arrayA, b)){
-            answer = Math.max(answer, b);
-        }
-        
-        
-        return answer;
+        return Math.max(solve(arrayA, arrayB), solve(arrayB, arrayA));
     }
     
-    int gcd(int a, int b){
+    public int solve(int[] A, int[] B) {
+        int g = A[0];
         
-        int tmp = -1;
-        
-        if (b > a){
-            tmp = a;
-            a = b;
-            b = tmp;
+        for (int i = 1; i < A.length; i++) {
+            g = gcd(g, A[i]);
         }
         
-        while (b != 0){
-            tmp = b;
-            b = a % b;
-            a = tmp;
+        for (int b : B) {
+            if (b % g == 0) return 0;
         }
         
-        return a;
+        return g;
     }
     
-    boolean canDivide(int[] array, int gcd){
-        for(int num:array){
-            if(num%gcd==0){
-                return true;
-            }
-        }
-        return false;
+    public int gcd(int a, int b) {
+        if (b == 0) return a;
+        return gcd(b, a % b);
     }
-    
 }

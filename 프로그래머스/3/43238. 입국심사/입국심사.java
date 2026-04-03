@@ -2,36 +2,30 @@ import java.util.*;
 
 class Solution {
     public long solution(int n, int[] times) {
+        long answer = 0;
         
-        int M = times.length;
+        long end = (long) Arrays.stream(times).max().getAsInt() * n;
         
-        long maxN = -1;
-        for (int i = 0; i < M; i++){
-            maxN = Math.max(maxN, times[i]);
-        }
+        long start = 0;
         
-        long s = 1;
-        long e =  maxN * n;
+        long m;
         
-        long ans = -1;
-        
-        while (s <= e){
-            long mid = (s + e) / 2;
+        while (start < end) {
+            m = (end + start) / 2;
+            
             long tmp = 0;
-            
-            // 몇명이나 들어올 수 있는지
-            for (int i = 0; i < M; i++){
-                tmp += mid / times[i];
+            for (int i = 0; i < times.length; i++) {
+                tmp += m / times[i];
             }
             
-            if (tmp >= n){
-                ans = mid;
-                e = mid - 1;
-            }else{
-                s = mid + 1;
+            if (tmp >= n) {
+                answer = m;
+                end = m;
+            } else{
+                start = m + 1;
             }
+            
         }
-        
-        return ans;
+        return answer;
     }
 }

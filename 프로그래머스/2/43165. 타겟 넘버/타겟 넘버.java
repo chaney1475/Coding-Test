@@ -1,49 +1,43 @@
 import java.util.*;
 
 class Solution {
-    int[] nums;
-    int N;
+    int count = 0;
+    int n;
+    int[] numbers;
     int target;
-    int ans;
+    
     public int solution(int[] numbers, int target) {
-        nums = numbers;
+        n = numbers.length;
+        this.numbers = numbers;
         this.target = target;
-        N = numbers.length;
         
-        ans = 0;
-        dfs(0,0); // 0번의 숫자를 더할건가 뺄건가 
+        count = 0;
+        dfs(0, 0);
         
-        return ans;
+        return count;
     }
     
-    void dfs(int now, int tmp){
-        
-        // 두개의 가지 치기
-        
-        // 모두를 더해도 여전히 작다 타겟보다        
-        // 모두를 빼도 여전이 크다 타켓보다 
-        
-        int sum = 0;
-        for (int i = now; i < N; i++){
-            sum += nums[i];
+    public void dfs(int idx, int total) {
+        // 현재 다음으로 더해야하는 인덱스 위치
+            
+        int tmp = 0;
+        for (int i = idx; i < n; i++) {
+            tmp += numbers[i];
         }
         
-        if (target > sum + tmp){
-            return;
-        }
-        if (target < tmp - sum){
-            return;
-        }
+        // 다 더해도 total보다 작으면 그만
+        if (total + tmp < target) return;
+        // 다 빼도 total보다 크면 그만
+        if (total - tmp > target) return;
         
-        if (now == N ){
-            if (target == tmp){
-                ans++;
-            }
+        if (idx == n) {
+            // 다음으로 갈 인덱스 없음
+            if (target == total) count++;
             return;
         }
         
-        dfs(now + 1, tmp - nums[now]);
-        dfs(now + 1, nums[now] + tmp);
+        dfs(idx + 1, total + numbers[idx]);
+        dfs(idx + 1, total - numbers[idx]);
         
     }
 }

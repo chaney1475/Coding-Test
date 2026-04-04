@@ -1,10 +1,10 @@
 # [level 2] 배달 - 12978 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12978#) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12978?utm_source=chatgpt.com) 
 
 ### 성능 요약
 
-메모리: 89.9 MB, 시간: 1.92 ms
+메모리: 73.6 MB, 시간: 6.80 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2026년 03월 29일 01:25:03
+2026년 04월 04일 17:59:31
 
 ### 문제 설명
 

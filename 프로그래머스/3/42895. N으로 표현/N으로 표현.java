@@ -2,47 +2,51 @@ import java.util.*;
 
 class Solution {
     public int solution(int N, int number) {
-        //몇번쓰는지를 dp
-        Set<Integer>[] dp = new Set[9];
         
-        for (int i = 0; i <= 8; i++){
-            dp[i] = new HashSet<>();
+        Set<Integer>[] sets = new HashSet[9];
+        
+        for (int i = 1; i <= 8; i++) {
+            sets[i] = new HashSet<>();
         }
         
-        dp[1].add(N);
-        int ans = -1;
+        sets[1].add(N);
+        if (N == number) return 1;
         
-        for (int i = 1; i <= 8; i++){ //dp[2] -> dp[1] + dp[1] 을 더하거나 뺀거나 곱한것 
-            for (int j = 1; j < i; j++){
-                for (Integer n1 : dp[j]){
-                    for (Integer n2 : dp[i -j]){
-                        dp[i].add(n1 + n2);
-                        dp[i].add(n1 * n2);
-                        if (n1 > n2){
-                            dp[i].add(n1 - n2);
+        for (int i = 2; i <= 8; i++) {
+            
+            // 이어붙이기
+            sets[i].add(makeNum(i, N));
+            
+            for (int j = 1; j < i; j ++) {
+                for (int n1 : sets[j]) {
+                    for (int n2 : sets[i - j]) {
+                        
+                        sets[i].add(n1 + n2);
+                        sets[i].add(n1 * n2);
+                        if (n1 - n2 > 0) {
+                        sets[i].add(n1 - n2);
                         }
-                        if (n2 != 0 && n1 % n2 == 0){
-                            dp[i].add(n1 / n2);
+                        if (n2 - n1 > 0) {
+                        sets[i].add(n2 - n1);
                         }
+                        
+                        if (n2 != 0) sets[i].add(n1 / n2);
+                        if (n1 != 0) sets[i].add(n2 / n1);
                     }
                 }
             }
-            dp[i].add(makeNum(i, N));
-            if (dp[i].contains(number)) {
-                ans = i;
-                break;
-            }
+
+            if (sets[i].contains(number)) return i;   
         }
         
-        return ans;
+        return -1;
     }
     
-    static int makeNum(int n, int N){
-        int sum = 0;
-        for (int i = 0; i < n; i++){
-            sum *= 10;
-            sum += N;
+    public int makeNum(int n, int num) {
+        int tmp = 0;
+        for (int i = 0; i < n; i++) {
+            tmp = tmp * 10 + num;
         }
-        return sum;
+        return tmp;
     }
 }

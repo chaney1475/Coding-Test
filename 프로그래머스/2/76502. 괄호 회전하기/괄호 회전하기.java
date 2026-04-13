@@ -1,38 +1,51 @@
 import java.util.*;
+// []  -> 
+// 열리는 애다  -> 안에 있음 잇으면 닫는거 확인하기 
+// 열리는 애고 또 열리는 애면 일단 쌓기
 
 class Solution {
-    
+    Map<Character, Character> map = new HashMap<>();
     
     public int solution(String s) {
         
-        int N = s.length();
-        
-        LinkedList<Character> stack = new LinkedList<>();
-        
-        Map<Character, Character> map = new HashMap<>();
-        map.put('(',')');
         map.put('[',']');
         map.put('{','}');
+        map.put('(',')');
         
-        int ans = 0;
-        
-        for (int i = 0; i < N; i++){
-            // 더 할 값
-            stack.clear();
-            for (int j = 0; j < N; j++){
-                Character now = s.charAt((j + i) % N);
-                if (!stack.isEmpty() && map.get(stack.getLast()) == now){
-                    stack.pollLast();
-                }else{
-                    stack.addLast(now);
-                }
-                
-            }
+        int answer = 0;
+        int n = s.length();
+        char[] tmp = new char[n];
             
-            if (stack.isEmpty()) {
-                ans++;
+        for (int i = 0; i < n; i++) {
+            tmp = new char[n];
+            for (int j = 0; j < n; j++) {
+                char now = s.charAt((i + j) % n);
+                tmp[j] = now;
+            }
+            answer += isTrue(tmp) ? 1 : 0;
+            
+        }
+        
+        return answer;
+    }
+    
+    public boolean isTrue(char[] tmp) {
+        Deque<Character> d = new ArrayDeque<>();
+        
+        int n = tmp.length;
+        
+        for (int i = 0; i < n; i++) {
+            if (!d.isEmpty() && tmp[i] == map.getOrDefault(d.peekLast(), '1')) {
+                d.pollLast();
+                
+            } else {
+                d.add(tmp[i]);
             }
         }
-        return ans;
+        
+        if (d.size() == 0) {
+            return true;
+        }
+        return false;
     }
 }

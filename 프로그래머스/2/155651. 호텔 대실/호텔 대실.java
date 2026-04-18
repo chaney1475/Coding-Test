@@ -1,51 +1,49 @@
 import java.util.*;
 
 class Solution {
-    static boolean[] visited;
-    static int N;
-    
-    
     public int solution(String[][] book_time) {
-        int ans = 0;
-        N = book_time.length;
-        visited = new boolean[N];
-        int[][] list = new int [N][2];
         
-        for (int  i = 0; i < N; i++){
-            int start = makeInt(book_time[i][0]);
-            int end = makeInt(book_time[i][1]);
-            list[i] = new int[] {start, end};
+        int N = book_time.length;
+        int[][] books = new int[N][2];
+        
+        for (int i = 0; i < N; i++) {
+            books[i][0] = makeTime(book_time[i][0]);
+            books[i][1] = makeTime(book_time[i][1]);
         }
         
-        Arrays.sort(list, (a,b) -> {
-            if (a[0] != b[0]){
-                return Integer.compare(a[0], b[0]);
-            }else{
-                return Integer.compare(a[1], b[1]);
+        Arrays.sort(books, (a,b) -> {
+            if (a[0] != b[0]) {
+                return a[0] - b[0];
             }
+            return a[1] - b[1];
         });
+        
         PriorityQueue<Integer> q = new PriorityQueue<>();
         
-        for (int i = 0; i < N; i++){
-            int[] now = list[i];
+        int answer = 0;
+        
+        for (int i = 0; i < N; i++) {
+            int[] cur = books[i];
+            int in = cur[0];
+            int out = cur[1];
             
-            int start = now[0];
-            int end = now[1] + 10; // 끝나는 시간 
-            
-            if (!q.isEmpty() && q.peek() <= start){
+            // 현재 있는 것들 중에 나보다 시간이 더 작은 거 있으면
+            if (!q.isEmpty() && q.peek() <= in) {
                 q.poll();
             }
             
-            q.add(end);
-            
+            q.add(out +  10);
+            answer = Math.max(q.size(), answer);
         }
         
-        return q.size();
+        return answer;
     }
     
-    
-    static int makeInt(String s){
-        String[] t = s.split(":");
-        return Integer.parseInt(t[0]) * 60 + Integer.parseInt(t[1]);
+    public int makeTime(String s) {
+        String[] str = s.split(":");
+        int h = Integer.parseInt(str[0]);
+        int m = Integer.parseInt(str[1]);
+        
+        return h * 60 + m;
     }
 }

@@ -1,29 +1,32 @@
 import java.util.*;
 
 class Solution {
-
-    static int cnt;
-
+    int answer;
+    int rpt;
     public int solution(int storey) {
-        cnt = Integer.MAX_VALUE;
-
-        dfs(storey, 0);
-
-        return cnt;
+        answer = Integer.MAX_VALUE;
+        rpt = 0;
+        
+        
+        dfs(storey, 0, 0);
+        
+        return answer;
     }
-
-    void dfs(int now, int d) {
+    
+    public void dfs(int now, int count, int idx) {
+        
         if (now == 0) {
-            cnt = Math.min(cnt, d);
+            answer = Math.min(answer, count);
             return;
         }
-
-        int last = now % 10;
+        if (count > answer) return; 
         
-        if (last >= 5) {
-            dfs(now / 10 + 1, d + (10 - last));
-        } 
-    
-        dfs(now / 10, d + last);
+        int pos = (int)Math.pow(10, idx);
+        
+        int last = (now / pos) % 10; // 현재 계산해야하는 자리의 끝.
+        
+        dfs(now - (last) * pos , count + last, idx + 1);
+        
+        dfs(now + (10 - last) * pos, count + (10 - last), idx + 1);
     }
 }

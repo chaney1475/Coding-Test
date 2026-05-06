@@ -1,36 +1,32 @@
 import java.util.*;
-
+// 투포인터
 class Solution {
-    public int[] solution(int[] a, int k) {
-        int[] answer = new int[2];
-        
-        Arrays.sort(a);
-        
+    public int[] solution(int[] sequence, int k) {
         int s = 0;
         int e = 0;
         
-        long K = (long) k;
-        int N = a.length;
+        // s로 시작 e는 포함 안함
+        int[] answer = new int[2];
         
-        long tmp = 0;
+        int len = 1000001;
+        int sum = 0;
         
-        long len = N + 1;
+        int N = sequence.length;
         
-        //작으면 e를 늘림 크면 크면 왼쪽을 오른쪽으로 함
-        while(e < N) {
-            tmp += a[e];
-            while(tmp >= K){
-                if(tmp == K && (e - s + 1) < len){
-                    answer[0] = s;
-                    answer[1] = e;
-                    len = e - s + 1;
-                }
-                tmp -= a[s];
-                s++;
+        for (int i = 0; i < N; i++) {
+            sum += sequence[i];
+            
+            while(sum > k && s <= i) {
+                sum -= sequence[s++];
             }
-            e++;
+            
+            if (sum == k && (len > i - s)) {
+                    answer[0] = s;
+                    answer[1] = i;
+                    len = i - s;
+            }
         }
-        return answer;
         
+        return answer;
     }
 }

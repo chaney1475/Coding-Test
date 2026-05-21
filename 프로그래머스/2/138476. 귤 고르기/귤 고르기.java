@@ -1,28 +1,33 @@
 import java.util.*;
-
 class Solution {
     public int solution(int k, int[] tangerine) {
-        int answer = 0;
         
-        int sum = 0; // k 개를 모아야함!
         int N = tangerine.length;
+        Map<Integer,Integer> map = new HashMap<>();
         
-        Map<Integer, Integer> map = new HashMap<>();
-        
-        for (int i = 0; i < N; i++){
-            map.put(tangerine[i], map.getOrDefault(tangerine[i], 0) + 1);
+        for (int i = 0; i < N; i++) {
+            int cur = tangerine[i];
+            map.put(cur, map.getOrDefault(cur, 0) + 1);
         }
         
-        List<Map.Entry<Integer, Integer>> set = new ArrayList<>(map.entrySet());
-        set.sort((a, b) -> Integer.compare(b.getValue(), a.getValue()));
+        int[][] nums = new int[map.size()][2];
         
-        for (Map.Entry<Integer, Integer> e : set){
-            sum += e.getValue();
-            answer ++;
-            if(sum >= k) break;
+        int i = 0;
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            nums[i][0] = entry.getKey();
+            nums[i++][1] = entry.getValue();
         }
         
-        return answer;
+        Arrays.sort(nums, (a,b) -> b[1] - a[1]);
         
+        int sum = 0; // 전체 귤 갯수
+        int ans = 0;
+        for (int j = 0; j < i; j++) {
+            sum += nums[j][1];
+            ans = j + 1;
+            if (sum >= k) break;
+        } 
+        
+        return ans;
     }
 }
